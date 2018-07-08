@@ -1,0 +1,14 @@
+.cproject
+.project
+.settings/
+*.a
+.DS_Store
+*.exe
+*.out
+.nfs.*
+._*
+*.cor
+asm_test
+
+
+
