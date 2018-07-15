@@ -1,12 +1,21 @@
 
+
+ifeq ($(HOSTTYPE),)
+	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
+SHARED = libft_malloc_$(HOSTTYPE).so
+SYMLINK = libft_malloc.so
+
+
 GCC = gcc
 
 F = -Wall -Wextra -Werror -I./libft/inc
 
 NAME = malloc ##name
 
-INC_LIB = libft/libft.a \
+LIB_PATH = libft
 
+LIB = $(LIB_PATH)/libft.a \
 
 #******************************************************************************#
 # HEADER
@@ -44,24 +53,24 @@ $(OBJ_DIR):
 
 all: $(NAME)
 
-$(NAME): $(INC_LIB) $(OBJ) $(INC)
-		@make -C libft/
-		$(GCC) $(F) -o $(NAME) $(OBJECT) $(INC_LIB)
+$(NAME): $(OBJ) $(INC)
+		make -C libft/
+		$(GCC) $(F) -o $(NAME) $(OBJ) $(LIB)
 
 clean:
-	@make clean -C libft/
-	rm -rf $(OBJECT)
+	make clean -C libft/
+	rm -rf $(OBJ)
 
 fclean: clean
-	@make fclean -C libft/
-	@rm -f $(NAME) a.out
+	make fclean -C libft/
+	rm -f $(NAME) a.out
 
 re: fclean all
 
-
-$(INC_LIB):
-	make -C libft/
-
+#
+#$(LIB):
+#	make -C libft/
+#
 
 
 
