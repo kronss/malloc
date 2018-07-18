@@ -10,5 +10,7 @@
 *.cor
 asm_test
 *.o
-libft_malloc_*.so
+libft_malloc*.so
+
+
 

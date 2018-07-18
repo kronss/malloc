@@ -3,7 +3,7 @@
 ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
-SHARED = libft_malloc_$(HOSTTYPE).so
+NAME = libft_malloc_$(HOSTTYPE).so
 SYMLINK = libft_malloc.so
 
 
@@ -11,7 +11,6 @@ GCC = gcc
 
 F = -Wall -Wextra -Werror -I./libft/inc
 
-NAME = malloc ##name
 
 LIB_PATH = libft
 
@@ -29,7 +28,8 @@ INC = $(addprefix $(INC_DIR)/, $(INC_FILE_NAME))
 # SOURCES/OBJECT
 #******************************************************************************#
 
-SRC_FILE_NAME = main.c \
+SRC_FILE_NAME = 	malloc.c \
+					main.c \
 
 SRC_DIR = src
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILE_NAME))
@@ -51,11 +51,14 @@ $(OBJ_DIR):
 
 .PHONY: all clean fclean re bug debug
 
-all: $(NAME)
+all: $(NAME) $(SYMLINK)
 
 $(NAME): $(OBJ) $(INC)
 		make -C libft/
 		$(GCC) $(F) -o $(NAME) $(OBJ) $(LIB)
+
+$(SYMLINK):
+	#ln -s $(SHARED) $(SYMLINK)
 
 clean:
 	make clean -C libft/
