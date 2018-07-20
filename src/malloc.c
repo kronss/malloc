@@ -1,38 +1,46 @@
+#include <pthread.h>
+#include <stdio.h>
+#include <unistd.h>
 
 
+pthread_mutex_t mutex_malloc = PTHREAD_MUTEX_INITIALIZER;
+
+//
+//int main()
+//{
+//	printf("%d", PAGE_SIZE);
+//}
 
 
-void *base;
 
 
 void *malloc(size_t size)
 {
+	void *ptr;
 
-    t_block b,last;
-    size_t s;
-    s = align4(size );
-    if (base) {
-        /* First find a block */
-        last = base;
-        b = find_block (&last ,s);
-        if (b) {
-            /* can we split */
-            if ((b->size - s) >= ( BLOCK_SIZE + 4))
-                split_block (b,s);
-                b->free =0;
-            } else {
-            /* No fitting block , extend the heap */
-            b = extend_heap (last ,s);
-            if (!b)
-                return(NULL );
-            }
-        } else {
-            /* first time */
-            b = extend_heap (NULL ,s);
-            if (!b)
-                return(NULL );
-            base = b;
-        }
+	pthread_mutex_lock(&mutex_malloc);
 
-    return(b->data );
+	if (size <= 0) {
+		pthread_mutex_unlock(&mutex_malloc);
+		return (void *)0x0L;
+	}
+
+	if (size < (size_t)-32) {
+		ALIGN_META_INFO(size);
+	}
+
+
+	if () {
+
+	} else if () {
+
+	} else {
+
+	}
+
+
+
+	pthread_mutex_unlock(&mutex_malloc);
+
+	return (ptr);
 }

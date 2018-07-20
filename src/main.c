@@ -1,11 +1,11 @@
 #include <stdio.h>
-
+#include <stdlib.h>
 
 /*
- * ◦ mmap(2)
-◦ munmap(2)
-◦ getpagesize(3)
-◦ getrlimit(2)
+ * ◦  mmap(2)
+◦     munmap(2)
+◦     getpagesize(3)
+◦     getrlimit(2)
 ◦ The authorized functions within your libft (write(2) par exemple ;-) )
 ◦ The functions from libpthread
  */
@@ -22,13 +22,18 @@ calloc
 
 
 
+//pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
 
 int main(int ac, char **av)
 {
-    if (!av[ac])
-    printf("Hello!\n");
+    char *ptr = NULL;
+    ptr = malloc(-1);
+
+    printf("--%p\n", ptr);
+
+
 
     return (0);
 }

@@ -1,10 +1,15 @@
 #ifndef MALLOC_H
 # define MALLOC_H
 
+#include <sys/user.h> /* PAGE_SIZE */
 
-#define align4(x) (((((x) -1) >> 2) << 2) + 4)
+
+#define ALIGN_META_INFO(x) (((((x) -1) >> 2) << 2) + 4)
 
 #define BLOCK_SIZE sizeof(struct s_block)
+
+
+
 
 
 void                    *malloc(size_t size);
