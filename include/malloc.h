@@ -10,6 +10,38 @@
 
 
 
+/* block struct */
+struct s_block {
+	size_t           size;
+	s_block         *next;
+	s_block         *prev;
+	int              free;
+	void            *ptr;
+	char             data[1];                /* A pointer to the allocated block */
+};
+
+
+enum {
+	TINY = 1,
+	SMALL = 2,
+	LARGE = 3
+};
+
+
+enum {
+	TINY_ZONE  = PAGE_SIZE < 4096 ? 4096 : PAGE_SIZE,
+	SMALL_ZONE = TINY_ZONE * 100,
+	LARGE_ZONE = SMALL_ZONE + 1   //TODO: rework!
+};
+
+enum {
+
+
+};
+
+
+
+
 
 
 void                    *malloc(size_t size);

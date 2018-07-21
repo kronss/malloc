@@ -16,7 +16,7 @@ pthread_mutex_t mutex_malloc = PTHREAD_MUTEX_INITIALIZER;
 
 void *malloc(size_t size)
 {
-	void *ptr;
+	void *retval;
 
 	pthread_mutex_lock(&mutex_malloc);
 
@@ -41,6 +41,10 @@ void *malloc(size_t size)
 
 
 	pthread_mutex_unlock(&mutex_malloc);
+	if (NULL == retval) {
+//		errno = ENOMEM;
 
+	}
+)
 	return (ptr);
 }
