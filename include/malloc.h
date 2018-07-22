@@ -2,7 +2,9 @@
 # define MALLOC_H
 
 #include <sys/user.h> /* PAGE_SIZE */
+#include <sys/mman.h>
 
+#define ALIGN_PAGE_SIZE(len_) ((PAGE_SIZE - 1) & (len_)) ? (((len_) + PAGE_SIZE) & ~(PAGE_SIZE - 1)) : (len_)
 
 #define ALIGN_META_INFO(x) (((((x) - 1) >> 2) << 2) + 4)
 

@@ -9,12 +9,28 @@ struct malloc_meneger_s malloc_meneger_g =
     .zone_heads = {NULL, NULL, NULL}
 };
 
+void *get_new_zone(zone_type_e zone)
+{
+    void *raw_ptr;
+    struct block_s *block;
+
+    ALIGN_PAGE_SIZE
+
+    raw_ptr = mmap(NULL, aligned, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+
+
+
+
+    return NULL;
+}
+
+
 void *get_ptr_from_zone(size_t size, zone_type_e zone)
 {
     void *retval;
 
     if (!malloc_meneger_g.zone_heads[zone]) {
-        malloc_meneger_g.zone_heads[zone] = new_zone();
+        malloc_meneger_g.zone_heads[zone] = get_new_zone(zone);
         if (!malloc_meneger_g.zone_heads[zone]) {
             return NULL;
         }
