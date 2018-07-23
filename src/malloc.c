@@ -1,7 +1,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <malloc.h>
+#include "malloc.h"
 
 pthread_mutex_t mutex_malloc = PTHREAD_MUTEX_INITIALIZER;
 struct malloc_meneger_s malloc_meneger_g =
@@ -9,33 +9,77 @@ struct malloc_meneger_s malloc_meneger_g =
     .zone_heads = {NULL, NULL, NULL}
 };
 
-void *get_new_zone(zone_type_e zone)
+void *get_best_chunk(size, struct block_s *head, zone_type_e zone)
 {
-    void *raw_ptr;
-    struct block_s *block;
+	struct block_s *i_ptr;
+	void *retval;
 
-    ALIGN_PAGE_SIZE
-
-    raw_ptr = mmap(NULL, aligned, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-
-
-
-
-    return NULL;
+	i_ptr = head;
+	while (i_ptr) {
+		if (i_ptr->space_left > size) {
+			retval = init_block_md(i_ptr, size);
+			break ;
+		}
+		if (i_ptr->next) {
+			i_ptr = i_ptr->next;
+		} else {
+			i_ptr->next = init_new_page(zone);
+			if (!i_ptr->next) {
+				retval = NULL;
+				break ;
+			}
+			i_ptr = i_ptr->next;
+		}
+	}
+	return retval;
 }
 
+//TODO: creat if for first initialization
+static inline void init_block_md(struct block_s *block_ptr, size)
+{
+	ft_memset(block_ptr, 0x0, sizeof(struct block_s));
+	//TODO:init meta data block
+}
+
+
+void *init_new_page(zone_type_e zone)
+{
+    void           *raw_ptr;
+    struct block_s *block;
+    size_t          size;
+
+    switch (zone) {
+    case TINY:  size = TINY_ZONE  ;    break;
+    case SMALL: size = SMALL_ZONE ;    break;
+    case LARGE: size = LARGE_ZONE ;    break;
+
+    default:    raw_ptr = NULL    ; goto bad;
+    }
+    ALIGN_PAGE_SIZE(size);
+    raw_ptr = mmap(NULL, size, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+	if (raw_ptr == MAP_FAILED) {
+		raw_ptr = NULL;
+		goto bad;
+	}
+	init_block_md((struct block_s *)raw_ptr, size);
+
+bad:
+    return raw_ptr ;
+}
 
 void *get_ptr_from_zone(size_t size, zone_type_e zone)
 {
     void *retval;
 
     if (!malloc_meneger_g.zone_heads[zone]) {
-        malloc_meneger_g.zone_heads[zone] = get_new_zone(zone);
+        malloc_meneger_g.zone_heads[zone] = init_new_page(zone);
         if (!malloc_meneger_g.zone_heads[zone]) {
             return NULL;
         }
     }
-    retval = get_best_chunk();
+
+    retval = get_best_chunk(size, malloc_meneger_g.zone_heads[zone], zone);
+
 
     return retval;
 }
@@ -51,10 +95,11 @@ void *get_ptr(size)
         retval = get_ptr_from_zone(size, TINY);
     } else if (size < SMALL_TRESHHOLD) {
         retval = get_ptr_from_zone(size, SMALL);
-    } else if (size < LARGE_TRESHHOLD) {
-        retval = get_ptr_from_zone(size, LARGE);
+//    } else if (size < LARGE_TRESHHOLD) {
+//        retval = get_ptr_from_zone(size, LARGE);
     } else {
-        ;
+        retval = get_ptr_from_zone(size, LARGE);
+;
     }
 
 

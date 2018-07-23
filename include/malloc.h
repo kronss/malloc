@@ -4,9 +4,10 @@
 #include <sys/user.h> /* PAGE_SIZE */
 #include <sys/mman.h>
 
-#define ALIGN_PAGE_SIZE(len_) ((PAGE_SIZE - 1) & (len_)) ? (((len_) + PAGE_SIZE) & ~(PAGE_SIZE - 1)) : (len_)
+#define ALIGN_PAGE_SIZE(len_) (len_) = ((PAGE_SIZE - 1) & (len_)) ? (((len_) + PAGE_SIZE) & ~(PAGE_SIZE - 1)) : (len_)
 
-#define ALIGN_META_INFO(x) (((((x) - 1) >> 2) << 2) + 4)
+
+#define ALIGN_META_INFO(x) (x) = (((((x) - 1) >> 2) << 2) + 4)  //TODO: re work
 
 #define BLOCK_SIZE sizeof(struct s_block)
 
@@ -14,7 +15,8 @@
 
 /* block struct */
 struct block_s {
-	size_t           size;
+//	size_t           size;
+	size_t           space_left;
 	s_block         *next;
 	s_block         *prev;
 	int              free;
