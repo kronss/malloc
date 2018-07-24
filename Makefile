@@ -11,17 +11,17 @@ GCC = gcc
 
 F = -Wall -Wextra -Werror -I./libft/inc
 
-
+#*** libft ********************************************************************#
 LIB_PATH = libft
+LIB = $(LIB_PATH)/libft.a
 
-LIB = $(LIB_PATH)/libft.a \
 
 #******************************************************************************#
 # HEADER
 #******************************************************************************#
-INC_FILE_NAME = 
-INC_DIR = inc
-INC = $(addprefix $(INC_DIR)/, $(INC_FILE_NAME))
+#INC_FILE_NAME = malloc.h
+INC_DIR = include
+#INC = $(addprefix $(INC_DIR)/, $(INC_FILE_NAME))
 
 
 #******************************************************************************#
@@ -40,9 +40,7 @@ OBJ_DIR = .obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(OBJ_FILE_NAME))
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	echo $@
-	echo $<
-	$(GCC) $(F) -o $@ -c $<
+	$(GCC) $(F) -o $@ -c $< -I$(INC_DIR)
 
 $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
@@ -53,27 +51,36 @@ $(OBJ_DIR):
 
 all: $(NAME) $(SYMLINK)
 
-$(NAME): $(OBJ) $(INC)
+$(NAME): $(LIB) $(OBJ) $(INC)
 		make -C libft/
 		$(GCC) $(F) -o $(NAME) $(OBJ) $(LIB)
 
 $(SYMLINK):
 	#ln -s $(SHARED) $(SYMLINK)
+	
+$(LIB): libft.all
 
-clean:
-	make clean -C libft/
+clean: libft.clean
 	rm -rf $(OBJ)
 
-fclean: clean
-	make fclean -C libft/
+fclean: libft.fclean clean
 	rm -f $(NAME) a.out
 
-re: fclean all
+re: libft.re fclean all
 
-#
-#$(LIB):
-#	make -C libft/
-#
+
+#*** libft * rules *************************************************************#
+libft.all:
+	make -C $(LIB_PATH)/ all
+
+libft.clean:
+	make -C $(LIB_PATH)/ clean
+
+libft.fclean:
+	make -C $(LIB_PATH)/ fclean
+
+libft.re:
+	make -C $(LIB_PATH)/ re
 
 
 

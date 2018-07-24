@@ -11,14 +11,20 @@
 
 #define BLOCK_SIZE sizeof(struct s_block)
 
+enum zone_type_e {
+	TINY = 1,
+	SMALL = 2,
+	LARGE = 3,
 
+	MAX_ZONE_TYPE
+};
 
 /* block struct */
 struct block_s {
 //	size_t           size;
 	size_t           space_left;
-	s_block         *next;
-	s_block         *prev;
+	struct block_s  *next;
+	struct block_s  *prev;
 	int              free;
 	void            *ptr;
 	char             data[1];                /* A pointer to the allocated block */
@@ -38,13 +44,7 @@ struct malloc_meneger_s {
 
 
 
-enum zone_type_e {
-	TINY = 1,
-	SMALL = 2,
-	LARGE = 3,
 
-	MAX_ZONE_TYPE
-};
 
 
 enum zone_size_e {

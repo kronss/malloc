@@ -9,6 +9,13 @@ struct malloc_meneger_s malloc_meneger_g =
     .zone_heads = {NULL, NULL, NULL}
 };
 
+//TODO: creat if for first initialization
+static inline void init_new_meta_block(struct block_s *block_ptr, size_t size)
+{
+	ft_memset(block_ptr, 0x0, sizeof(struct block_s));
+	//TODO:init meta data block
+}
+
 void *get_best_chunk(size, struct block_s *head, zone_type_e zone)
 {
 	struct block_s *i_ptr;
@@ -17,7 +24,7 @@ void *get_best_chunk(size, struct block_s *head, zone_type_e zone)
 	i_ptr = head;
 	while (i_ptr) {
 		if (i_ptr->space_left > size) {
-			retval = init_block_md(i_ptr, size);
+			retval = init_new_meta_block(i_ptr, size);
 			break ;
 		}
 		if (i_ptr->next) {
@@ -34,12 +41,6 @@ void *get_best_chunk(size, struct block_s *head, zone_type_e zone)
 	return retval;
 }
 
-//TODO: creat if for first initialization
-static inline void init_block_md(struct block_s *block_ptr, size)
-{
-	ft_memset(block_ptr, 0x0, sizeof(struct block_s));
-	//TODO:init meta data block
-}
 
 
 void *init_new_page(zone_type_e zone)
@@ -61,7 +62,7 @@ void *init_new_page(zone_type_e zone)
 		raw_ptr = NULL;
 		goto bad;
 	}
-	init_block_md((struct block_s *)raw_ptr, size);
+	init_new_meta_block((struct block_s *)raw_ptr, size);
 
 bad:
     return raw_ptr ;
