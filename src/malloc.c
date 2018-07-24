@@ -2,6 +2,17 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "malloc.h"
+#include "libft.h"
+
+static inline void *init_new_meta_block(struct block_s *block_ptr, size_t size);
+void *get_best_chunk(size_t size, struct block_s *head, enum zone_type_e zone);
+void *init_new_page(enum zone_type_e zone);
+void *get_ptr_from_zone(size_t size, enum zone_type_e zone);
+void *get_ptr(size_t size);
+void *malloc(size_t size);
+
+
+
 
 pthread_mutex_t mutex_malloc = PTHREAD_MUTEX_INITIALIZER;
 struct malloc_meneger_s malloc_meneger_g =
@@ -10,16 +21,18 @@ struct malloc_meneger_s malloc_meneger_g =
 };
 
 //TODO: creat if for first initialization
-static inline void init_new_meta_block(struct block_s *block_ptr, size_t size)
+static inline void *init_new_meta_block(struct block_s *block_ptr, size_t size)
 {
 	ft_memset(block_ptr, 0x0, sizeof(struct block_s));
+	(void)size;
 	//TODO:init meta data block
+	return (void *)block_ptr;
 }
 
-void *get_best_chunk(size, struct block_s *head, zone_type_e zone)
+void *get_best_chunk(size_t size, struct block_s *head, enum zone_type_e zone)
 {
 	struct block_s *i_ptr;
-	void *retval;
+	void *retval = NULL;
 
 	i_ptr = head;
 	while (i_ptr) {
@@ -43,10 +56,10 @@ void *get_best_chunk(size, struct block_s *head, zone_type_e zone)
 
 
 
-void *init_new_page(zone_type_e zone)
+void *init_new_page(enum zone_type_e zone)
 {
     void           *raw_ptr;
-    struct block_s *block;
+//    struct block_s *block;
     size_t          size;
 
     switch (zone) {
@@ -62,13 +75,14 @@ void *init_new_page(zone_type_e zone)
 		raw_ptr = NULL;
 		goto bad;
 	}
-	init_new_meta_block((struct block_s *)raw_ptr, size);
+	raw_ptr = init_new_meta_block((struct block_s *)raw_ptr, size);
+	printf("%s:%d:%p\n", __func__, __LINE__, raw_ptr); //debug
 
 bad:
     return raw_ptr ;
 }
 
-void *get_ptr_from_zone(size_t size, zone_type_e zone)
+void *get_ptr_from_zone(size_t size, enum zone_type_e zone)
 {
     void *retval;
 
@@ -78,6 +92,7 @@ void *get_ptr_from_zone(size_t size, zone_type_e zone)
             return NULL;
         }
     }
+	printf("%s:%d\n", __func__, __LINE__); //debug
 
     retval = get_best_chunk(size, malloc_meneger_g.zone_heads[zone], zone);
 
@@ -88,7 +103,7 @@ void *get_ptr_from_zone(size_t size, zone_type_e zone)
 
 
 
-void *get_ptr(size)
+void *get_ptr(size_t size)
 {
     void *retval;
 
@@ -121,6 +136,7 @@ void *malloc(size_t size)
 
 	if (size < (size_t)-32) {
 		ALIGN_META_INFO(size);
+		printf("size == %zu\n", size); //debug
 	}
 
     get_ptr(size);

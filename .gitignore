@@ -11,6 +11,6 @@
 asm_test
 *.o
 libft_malloc*.so
-
+a
 
 

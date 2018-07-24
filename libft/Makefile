@@ -6,13 +6,13 @@
 #    By: ochayche <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/21 20:49:37 by ochayche          #+#    #+#              #
-#    Updated: 2016/11/21 20:49:46 by ochayche         ###   ########.fr        #
+#    Updated: 2018/07/24 22:09:33 by ochayche         ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME = libft.a
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I./inc/
+CFLAGS = -Wall -Wextra -Werror -I./include/
 SHELL = /bin/sh
 
 SRC_DIR = src
@@ -21,7 +21,7 @@ SRC_DIR = src
 # HEADER
 #******************************************************************************#
 INC_NAME = libft.h
-INC_DIR = inc
+INC_DIR = include
 INC = $(addprefix $(INC_DIR)/, $(INC_NAME))
 
 #******************************************************************************#

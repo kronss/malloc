@@ -9,10 +9,13 @@ SYMLINK = libft_malloc.so
 
 GCC = gcc
 
-F = -Wall -Wextra -Werror -I./libft/inc
+F = -Wall -Wextra -Werror
+FSHARED = -shared -fPIC 
+
 
 #*** libft ********************************************************************#
 LIB_PATH = libft
+LIB_INC = $(LIB_PATH)/include
 LIB = $(LIB_PATH)/libft.a
 
 
@@ -29,7 +32,6 @@ INC_DIR = include
 #******************************************************************************#
 
 SRC_FILE_NAME = 	malloc.c \
-					main.c \
 
 SRC_DIR = src
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILE_NAME))
@@ -40,23 +42,22 @@ OBJ_DIR = .obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(OBJ_FILE_NAME))
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	$(GCC) $(F) -o $@ -c $< -I$(INC_DIR)
+	$(GCC) $(F) -o $@ -c $< -I$(INC_DIR) -I$(LIB_INC)
 
 $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
 
-#******************************************************************************#
+#** rules **********************************************************************#
 
 .PHONY: all clean fclean re bug debug
 
 all: $(NAME) $(SYMLINK)
 
 $(NAME): $(LIB) $(OBJ) $(INC)
-		make -C libft/
-		$(GCC) $(F) -o $(NAME) $(OBJ) $(LIB)
+		$(GCC) $(F) $(FSHARED) $(OBJ) $(LIB) -o $(NAME)
 
 $(SYMLINK):
-	#ln -s $(SHARED) $(SYMLINK)
+	ln -s $(NAME) $(SYMLINK)
 	
 $(LIB): libft.all
 
@@ -66,10 +67,10 @@ clean: libft.clean
 fclean: libft.fclean clean
 	rm -f $(NAME) a.out
 
-re: libft.re fclean all
+re: fclean all
 
 
-#*** libft * rules *************************************************************#
+#** rules * libft **************************************************************#
 libft.all:
 	make -C $(LIB_PATH)/ all
 
@@ -81,6 +82,12 @@ libft.fclean:
 
 libft.re:
 	make -C $(LIB_PATH)/ re
+
+
+test: all
+	gcc -c src/main.c -o .obj/main.o
+	gcc .obj/main.o $(OBJ) $(LIB)  -o a.out 
+	
 
 
 

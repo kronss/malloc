@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include "../include/malloc.h"
 
 /*
  * ◦  mmap(2)
@@ -29,7 +29,7 @@ calloc
 int main(int ac, char **av)
 {
     char *ptr = NULL;
-    ptr = malloc(-1);
+    ptr = malloc(1);
 
     printf("--%p\n", ptr);
 
