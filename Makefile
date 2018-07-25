@@ -54,7 +54,7 @@ $(OBJ_DIR):
 all: $(NAME) $(SYMLINK)
 
 $(NAME): $(LIB) $(OBJ) $(INC)
-		$(GCC) $(F) $(FSHARED) $(OBJ) $(LIB) -o $(NAME)
+		$(GCC) $(F) $(FSHARED) $(OBJ) $(LIB) -o $(NAME) 
 
 $(SYMLINK):
 	ln -s $(NAME) $(SYMLINK)

@@ -21,8 +21,7 @@ enum zone_type_e {
 
 /* block struct */
 struct block_s {
-//	size_t           size;
-	size_t           space_left;
+	size_t           size;           /* size + meta_info */
 	struct block_s  *next;
 	struct block_s  *prev;
 	int              free;
@@ -30,11 +29,21 @@ struct block_s {
 	char             data[1];                /* A pointer to the allocated block */
 };
 
-
+/*
+ *
+ */
+struct			zone_s
+{
+	size_t				origin_size;
+	size_t				space_left;
+	struct zone_s		*next;
+	struct zone_s		*prev;
+	struct block_s		md_block_head[];
+};
 
 
 struct malloc_meneger_s {
-    struct block_s *zone_heads[MAX_ZONE_TYPE];
+    struct zone_s *zone_heads[MAX_ZONE_TYPE];
 //    size_t malloc_call[MAX_ZONE_TYPE];
 };
 

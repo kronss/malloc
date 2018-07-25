@@ -30,8 +30,11 @@ int main(int ac, char **av)
 {
     char *ptr = NULL;
     ptr = malloc(1);
-
     printf("--%p\n", ptr);
+    ptr = malloc(4);
+    printf("--%p\n", ptr);
+
+
 
 
 
