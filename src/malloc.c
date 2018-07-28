@@ -4,8 +4,10 @@
 #include "malloc.h"
 #include "libft.h"
 
-static inline void *init_new_meta_block(struct zone_s *block_ptr, size_t size);
-void *find_available_block(zone_ptr, size);
+
+
+//static inline void *init_new_meta_block(struct zone_s *block_ptr, size_t size);
+void *find_available_block(struct zone_s *zone_ptr, size_t size);
 void *find_available_zone(size_t size_request, struct zone_s *zone_head, enum zone_type_e zone_type);
 void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone);
 void *get_ptr_from_zone(size_t size, enum zone_type_e zone_type);
@@ -22,34 +24,89 @@ struct malloc_meneger_s malloc_meneger_g =
 };
 
 //TODO: creat if for first initialization
-static inline void *init_new_meta_block(struct zone_s *page_ptr, size_t size)
+//static inline void *init_new_meta_block(struct zone_s *page_ptr)
+//{
+//	struct block_s *block_ptr;
+//
+//	block_ptr = page_ptr->md_block_head;
+//
+//
+//	ft_memset(block_ptr, 0x0, sizeof(struct block_s));
+//
+//	block_ptr->next = NULL;
+//	block_ptr->prev = NULL;
+//	block_ptr->free = 0;
+//
+//	return (void *)block_ptr;
+//}
+
+void *create_new_block(struct zone_s *zone_ptr,
+                       struct block_s *block_ptr,
+                       size_t size)
 {
-	struct block_s *block_ptr;
-
-	block_ptr = page_ptr->md_block_head;
+    struct block_s *new_block_ptr;
 
 
-	ft_memset(block_ptr, 0x0, sizeof(struct block_s));
+    zone_ptr->space_left -= size;
 
-	block_ptr->size = size;
-	block_ptr->next = NULL;
-	block_ptr->prev = NULL;
-	block_ptr->free = 0;
+    block_ptr->free = 0;
+    block_ptr->alloc_size = size;
+    block_ptr->
 
-	return (void *)block_ptr;
+
+    return NULL;
 }
 
+//void init_head_block(struct block_s *head_ptr)
+//{
+////    ининциализация фрии == 1
+//    head_ptr->free = 1;
+//}
 
+static inline
+int check_curr_block(struct zone_s *zone_ptr,
+                     struct block_s *block_ptr, size_t size)
+{
+    struct block_s *next;
+    ulong space_between;
+    int retval = 0;
+
+    if (!block_ptr->free) {
+//        retval = false
+        goto end;
+    }
+    if (!block_ptr->next) {
+        next = zone_ptr->md_block_head + zone_ptr->origin_size;
+    } else {
+        next = block_ptr->next;
+    }
+    space_between = (long) (next - block_ptr);
+    if (size < space_between) {
+        retval = 1;
+    }
+end:
+    return retval;
+}
 
 void *find_available_block(struct zone_s *zone_ptr, size_t size)
 {
 	void *retval = NULL;
+    struct block_s *block_ptr = zone_ptr->md_block_head;
+//
+//    if (!block_ptr) {
+//        init_head_block(zone_ptr, block_ptr, size);
+//    }
+    while (block_ptr) {
+//        block_ptr = block_ptr->next ?: block_ptr;
 
+        if (check_curr_block(zone_ptr, block_ptr, size)) {
+            retval = create_new_block(zone_ptr, block_ptr, size);
+            goto end;
+        }
 
-
-
-
-
+        block_ptr = block_ptr->next;
+    }
+end:
 	return retval;
 }
 
@@ -87,7 +144,8 @@ void *find_available_zone(size_t size_request, struct zone_s *zone_head, enum zo
 void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone)
 {
     void           *raw_ptr;
-    struct zone_s  *zone;
+    struct zone_s  *zone_ptr;
+    struct block_s *block_ptr;
     size_t          size;
 
     switch (zone_type) {
@@ -103,15 +161,21 @@ void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone)
 		raw_ptr = NULL;
 		goto end;
 	}
-//	init_head_md();
-	zone = (struct zone_s *)raw_ptr;
-	zone->origin_size = size;
-	zone->space_left = size - sizeof(struct zone_s);
-	zone->next = NULL;
-	zone->prev = prev_zone;
+
+	zone_ptr = (struct zone_s *)raw_ptr;
+	zone_ptr->origin_size = size;
+	zone_ptr->space_left = size - sizeof(struct zone_s);
+	zone_ptr->next = NULL;
+	zone_ptr->prev = prev_zone;
 	if (prev_zone) {
 		prev_zone->next = (struct zone_s *)raw_ptr;
 	}
+//	init_head_md();
+	block_ptr = zone_ptr->md_block_head;
+    block_ptr->next = NULL;
+    block_ptr->prev = NULL;
+//    block_ptr->size = zone_ptr->space_left;
+    block_ptr->free = 1;
 	printf("%s:%d:%p\n", __func__, __LINE__, raw_ptr); //debug
 end:
     return raw_ptr ;

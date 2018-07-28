@@ -9,7 +9,7 @@ SYMLINK = libft_malloc.so
 
 GCC = gcc
 
-F = -Wall -Wextra -Werror
+F = -Wall -Wextra -Werror -fPIC
 FSHARED = -shared -fPIC 
 
 

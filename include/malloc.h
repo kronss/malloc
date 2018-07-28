@@ -19,14 +19,21 @@ enum zone_type_e {
 	MAX_ZONE_TYPE
 };
 
+enum insert_type_e {
+    FRESH_ZONE,
+    USED_ZONE,
+};
+
 /* block struct */
 struct block_s {
-	size_t           size;           /* size + meta_info */
 	struct block_s  *next;
 	struct block_s  *prev;
-	int              free;
+	size_t           alloc_size;           /* size + meta_info */
+	int              free     :1,
+	                 reserved :31;
+
 	void            *ptr;
-	char             data[1];                /* A pointer to the allocated block */
+//	char             data[1];                /* A pointer to the allocated block */
 };
 
 /*
