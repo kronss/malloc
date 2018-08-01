@@ -9,7 +9,8 @@ SYMLINK = libft_malloc.so
 
 GCC = gcc
 
-F = -Wall -Wextra -Werror -fPIC
+#F = -Wall -Wextra -Werror -fPIC
+F = -Wall -Wextra  -fPIC
 FSHARED = -shared -fPIC 
 
 
@@ -90,6 +91,7 @@ test: all
 	
 
 
+DEBUGBIN = a.debug
 
 # bug:
 # 	gcc -g $(F) -o $(NAME) push_swap.c list_push_back.c ps_error.c print_stacks.c make_ss.c make_rr.c make_rrr.c pre_validate.c \
@@ -97,8 +99,13 @@ test: all
 # 	next_sort_3_b.c last_sort_3_b.c add_function.c optimization.c sorting_logic.c  print_operation.c $(INCL)
 
 bug:
-	gcc -g $(F) -o $(NAME_2) list_push_back.c add_function.c ps_error.c print_stacks.c make_ss.c make_rr.c make_rrr.c pre_validate.c init_var.c read_flags.c operation_push_back.c free_memory.c checker.c reading_commands.c $(INCL)
+	$(GCC) -g $(F) -o $(NAME) $(SRC) src/main.c $(LIB) -I$(INC_DIR) -I$(LIB_INC)
 
 debug: bug
-	lldb $(NAME_2) -- 2 3 4
+	lldb $(NAME)
+
+
+
+
+
 

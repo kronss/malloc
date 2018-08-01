@@ -46,15 +46,22 @@ void *create_new_block(struct zone_s *zone_ptr,
 {
     struct block_s *new_block_ptr;
 
+    new_block_ptr = (struct block_s *)((uint8_t*)block_ptr + size);
+    new_block_ptr->alloc_size = block_ptr->alloc_size - size;
+    printf("%s:%d:%d\n", __func__, __LINE__, new_block_ptr->alloc_size);
+    new_block_ptr->free = 1;
+    new_block_ptr->next = block_ptr->next;
+    new_block_ptr->prev = block_ptr;
+
+    block_ptr->alloc_size = size;
+    block_ptr->free = 0;
+    block_ptr->next = new_block_ptr;
+//    block_ptr->prev =
 
     zone_ptr->space_left -= size;
 
-    block_ptr->free = 0;
-    block_ptr->alloc_size = size;
-    block_ptr->
-
-
-    return NULL;
+    printf("%s:%d:%p\n", __func__, __LINE__, block_ptr->data);
+    return block_ptr->data;
 }
 
 //void init_head_block(struct block_s *head_ptr)
@@ -68,7 +75,7 @@ int check_curr_block(struct zone_s *zone_ptr,
                      struct block_s *block_ptr, size_t size)
 {
     struct block_s *next;
-    ulong space_between;
+    unsigned long space_between;
     int retval = 0;
 
     if (!block_ptr->free) {
@@ -80,7 +87,7 @@ int check_curr_block(struct zone_s *zone_ptr,
     } else {
         next = block_ptr->next;
     }
-    space_between = (long) (next - block_ptr);
+    space_between = (unsigned long) (next - block_ptr);
     if (size < space_between) {
         retval = 1;
     }
@@ -156,6 +163,8 @@ void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone)
     default:    raw_ptr = NULL    ;    goto end;
     }
     ALIGN_PAGE_SIZE(size);
+    printf("%s:%d: page size %llu\n", __func__, __LINE__, size);
+
     raw_ptr = mmap(NULL, size, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 	if (raw_ptr == MAP_FAILED) {
 		raw_ptr = NULL;
@@ -164,7 +173,7 @@ void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone)
 
 	zone_ptr = (struct zone_s *)raw_ptr;
 	zone_ptr->origin_size = size;
-	zone_ptr->space_left = size - sizeof(struct zone_s);
+	zone_ptr->space_left = size - sizeof(struct zone_s) - sizeof(struct block_s);
 	zone_ptr->next = NULL;
 	zone_ptr->prev = prev_zone;
 	if (prev_zone) {
@@ -174,9 +183,9 @@ void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone)
 	block_ptr = zone_ptr->md_block_head;
     block_ptr->next = NULL;
     block_ptr->prev = NULL;
-//    block_ptr->size = zone_ptr->space_left;
+    block_ptr->alloc_size = zone_ptr->space_left;
     block_ptr->free = 1;
-	printf("%s:%d:%p\n", __func__, __LINE__, raw_ptr); //debug
+    printf("%s:%d: ----- %llu\n", __func__, __LINE__, raw_ptr);
 end:
     return raw_ptr ;
 }
@@ -195,7 +204,6 @@ void *get_ptr_from_zone(size_t size, enum zone_type_e zone_type)
 
     retval = find_available_zone(size, malloc_meneger_g.zone_heads[zone_type], zone_type);
 
-
     return retval;
 }
 
@@ -206,15 +214,14 @@ void *get_ptr(size_t size)
 {
     void *retval;
 
-    if (size < TINY_TRESHHOLD) {
+    if (size <= TINY_TRESHHOLD) {
         retval = get_ptr_from_zone(size, TINY);
-    } else if (size < SMALL_TRESHHOLD) {
+    } else if (size <= SMALL_TRESHHOLD) {
         retval = get_ptr_from_zone(size, SMALL);
-//    } else if (size < LARGE_TRESHHOLD) {
+//    } else if (size <= LARGE_TRESHHOLD) {
 //        retval = get_ptr_from_zone(size, LARGE);
     } else {
         retval = get_ptr_from_zone(size, LARGE);
-;
     }
 
 
@@ -232,20 +239,11 @@ void *malloc(size_t size)
 	if (size <= 0) {
 	    goto end;
 	}
-
-	if (size < (size_t)-32) {
+	if (size < (size_t) (-sizeof(struct block_s))) {
 		ALIGN_META_INFO(size);
 		printf("size == %zu\n", size); //debug
 	}
-
-    get_ptr(size);
-
-
-	if (NULL == retval) {
-//		errno = ENOMEM;
-
-	}
-
+	retval = get_ptr(size);
 end:
     pthread_mutex_unlock(&mutex_malloc);
     return retval;

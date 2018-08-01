@@ -29,12 +29,18 @@ calloc
 int main(int ac, char **av)
 {
     char *ptr = NULL;
-    ptr = malloc(1);
-    printf("--%p\n", ptr);
-    ptr = malloc(4);
-    printf("--%p\n", ptr);
 
+    printf("sizeof struct block_s == %zu\n", sizeof(struct block_s));
+    printf("sizeof struct zone_s == %zu\n", sizeof(struct zone_s));
 
+    for (int i = 0; i < 10000; ++i) {
+    	ptr = malloc(8);
+	}
+
+//
+//    printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr);
+//    ptr = malloc(4);
+//    printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr);
 
 
 
