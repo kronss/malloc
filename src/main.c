@@ -30,14 +30,22 @@ int main(int ac, char **av)
 {
     char *ptr = NULL;
 
-    printf("sizeof struct block_s == %zu\n", sizeof(struct block_s));
-    printf("sizeof struct zone_s == %zu\n", sizeof(struct zone_s));
+//    printf("sizeof struct block_s == %zu\n", sizeof(struct block_s));
+//    printf("sizeof struct zone_s == %zu\n", sizeof(struct zone_s));
 
-    for (int i = 0; i < 10000; ++i) {
-    	ptr = malloc(8);
-	}
+//    for (int i = 0; i < 10; ++i) {
+    	ptr = malloc(3);
+//	}
+
 
 //
+    show_alloc_mem();
+
+    free(ptr);
+//    ptr = malloc(3111);
+//
+//    show_alloc_mem();
+
 //    printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr);
 //    ptr = malloc(4);
 //    printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr);

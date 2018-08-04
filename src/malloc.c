@@ -1,5 +1,3 @@
-#include <pthread.h>
-#include <stdio.h>
 #include <unistd.h>
 #include "malloc.h"
 #include "libft.h"
@@ -23,23 +21,6 @@ struct malloc_meneger_s malloc_meneger_g =
     .zone_heads = {NULL, NULL, NULL}
 };
 
-//TODO: creat if for first initialization
-//static inline void *init_new_meta_block(struct zone_s *page_ptr)
-//{
-//	struct block_s *block_ptr;
-//
-//	block_ptr = page_ptr->md_block_head;
-//
-//
-//	ft_memset(block_ptr, 0x0, sizeof(struct block_s));
-//
-//	block_ptr->next = NULL;
-//	block_ptr->prev = NULL;
-//	block_ptr->free = 0;
-//
-//	return (void *)block_ptr;
-//}
-
 void *create_new_block(struct zone_s *zone_ptr,
                        struct block_s *block_ptr,
                        size_t size)
@@ -48,7 +29,7 @@ void *create_new_block(struct zone_s *zone_ptr,
 
     new_block_ptr = (struct block_s *)((uint8_t*)block_ptr + size);
     new_block_ptr->alloc_size = block_ptr->alloc_size - size;
-    printf("%s:%d:%d\n", __func__, __LINE__, new_block_ptr->alloc_size);
+    printf("%s:%d:%zu\n", __func__, __LINE__, new_block_ptr->alloc_size);
     new_block_ptr->free = 1;
     new_block_ptr->next = block_ptr->next;
     new_block_ptr->prev = block_ptr;
@@ -63,12 +44,6 @@ void *create_new_block(struct zone_s *zone_ptr,
     printf("%s:%d:%p\n", __func__, __LINE__, block_ptr->data);
     return block_ptr->data;
 }
-
-//void init_head_block(struct block_s *head_ptr)
-//{
-////    ининциализация фрии == 1
-//    head_ptr->free = 1;
-//}
 
 static inline
 int check_curr_block(struct zone_s *zone_ptr,
@@ -163,7 +138,7 @@ void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone)
     default:    raw_ptr = NULL    ;    goto end;
     }
     ALIGN_PAGE_SIZE(size);
-    printf("%s:%d: page size %llu\n", __func__, __LINE__, size);
+    printf("%s:%d: page size %zu\n", __func__, __LINE__, size);
 
     raw_ptr = mmap(NULL, size, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 	if (raw_ptr == MAP_FAILED) {
@@ -207,9 +182,6 @@ void *get_ptr_from_zone(size_t size, enum zone_type_e zone_type)
     return retval;
 }
 
-
-
-
 void *get_ptr(size_t size)
 {
     void *retval;
@@ -218,17 +190,12 @@ void *get_ptr(size_t size)
         retval = get_ptr_from_zone(size, TINY);
     } else if (size <= SMALL_TRESHHOLD) {
         retval = get_ptr_from_zone(size, SMALL);
-//    } else if (size <= LARGE_TRESHHOLD) {
-//        retval = get_ptr_from_zone(size, LARGE);
     } else {
-        retval = get_ptr_from_zone(size, LARGE);
+        retval = get_ptr_from_zone(size, LARGE); /*rework check according to subj*/
     }
-
 
     return retval;
 }
-
-
 
 void *malloc(size_t size)
 {

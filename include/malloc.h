@@ -3,6 +3,10 @@
 
 #include <sys/user.h> /* PAGE_SIZE */
 #include <sys/mman.h>
+#include <pthread.h>
+#include <stdio.h> /*printf remove*/
+
+
 
 #define ALIGN_PAGE_SIZE(len_) (len_) = ((PAGE_SIZE - 1) & (len_)) ? (((len_) + PAGE_SIZE) & ~(PAGE_SIZE - 1)) : (len_)
 
@@ -13,9 +17,10 @@
 #define METABLOCK_SIZE sizeof(struct s_block)
 
 enum zone_type_e {
-	TINY = 1,
-	SMALL = 2,
-	LARGE = 3,
+	MIN_ZONE_TYPE,
+	TINY = MIN_ZONE_TYPE,
+	SMALL,
+	LARGE,
 
 	MAX_ZONE_TYPE
 };
@@ -81,9 +86,12 @@ enum zone_treshold_e{
 
 
 void                    *malloc(size_t size);
+void					free(void *ptr);
+void 					show_alloc_mem();
 
 
 
-
+extern struct malloc_meneger_s malloc_meneger_g;
+extern pthread_mutex_t mutex_malloc;
 
 #endif /*MALLOC_H*/

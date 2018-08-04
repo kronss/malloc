@@ -19,6 +19,11 @@ LIB_PATH = libft
 LIB_INC = $(LIB_PATH)/include
 LIB = $(LIB_PATH)/libft.a
 
+#*** printf *******************************************************************#
+PF_PATH = printf
+PF_INC = $(PF_PATH)
+PF = $(PF_PATH)/libftprintf.a
+
 
 #******************************************************************************#
 # HEADER
@@ -32,7 +37,9 @@ INC_DIR = include
 # SOURCES/OBJECT
 #******************************************************************************#
 
-SRC_FILE_NAME = 	malloc.c \
+SRC_FILE_NAME =		malloc.c \
+					show_alloc_mem.c \
+					free.c
 
 SRC_DIR = src
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILE_NAME))
@@ -48,13 +55,13 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
 
-#** rules **********************************************************************#
+#** rules *********************************************************************#
 
 .PHONY: all clean fclean re bug debug
 
 all: $(NAME) $(SYMLINK)
 
-$(NAME): $(LIB) $(OBJ) $(INC)
+$(NAME): $(LIB) $(PF) $(OBJ) $(INC)
 		$(GCC) $(F) $(FSHARED) $(OBJ) $(LIB) -o $(NAME) 
 
 $(SYMLINK):
@@ -62,16 +69,18 @@ $(SYMLINK):
 	
 $(LIB): libft.all
 
-clean: libft.clean
+$(PF): printf.all
+
+clean: libft.clean printf.clean
 	rm -rf $(OBJ)
 
-fclean: libft.fclean clean
-	rm -f $(NAME) a.out
+fclean: libft.fclean printf.fclean clean
+	rm -f $(NAME) $(SYMLINK) a.out
 
 re: fclean all
 
 
-#** rules * libft **************************************************************#
+#** rules * libft *************************************************************#
 libft.all:
 	make -C $(LIB_PATH)/ all
 
@@ -83,6 +92,19 @@ libft.fclean:
 
 libft.re:
 	make -C $(LIB_PATH)/ re
+
+#** rules * printf *************************************************************#
+printf.all:
+	make -C $(PF_PATH)/ all
+
+printf.clean:
+	make -C $(PF_PATH)/ clean
+
+printf.fclean:
+	make -C $(PF_PATH)/ fclean
+
+printf.re:
+	make -C $(PF_PATH)/ re
 
 
 test: all
