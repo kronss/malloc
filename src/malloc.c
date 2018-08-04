@@ -15,12 +15,6 @@ void *malloc(size_t size);
 
 
 
-pthread_mutex_t mutex_malloc = PTHREAD_MUTEX_INITIALIZER;
-struct malloc_meneger_s malloc_meneger_g =
-{
-    .zone_heads = {NULL, NULL, NULL}
-};
-
 void *create_new_block(struct zone_s *zone_ptr,
                        struct block_s *block_ptr,
                        size_t size)
