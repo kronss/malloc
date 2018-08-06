@@ -41,7 +41,8 @@ int main(int ac, char **av)
 //
     show_alloc_mem();
 
-    free(ptr);
+//    free(ptr + 42);
+    free(NULL + 0x1);
 //    ptr = malloc(3111);
 //
 //    show_alloc_mem();

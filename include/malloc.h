@@ -4,6 +4,7 @@
 #include <sys/user.h> /* PAGE_SIZE */
 #include <sys/mman.h>
 #include <pthread.h>
+#include <stdint.h> /*uint8_t*/
 #include <stdio.h> /*printf remove*/
 
 

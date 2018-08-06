@@ -39,7 +39,8 @@ INC_DIR = include
 
 SRC_FILE_NAME =		malloc.c \
 					show_alloc_mem.c \
-					free.c
+					free.c \
+					alloc_meneger_api.c
 
 SRC_DIR = src
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILE_NAME))
@@ -61,7 +62,8 @@ $(OBJ_DIR):
 
 all: $(NAME) $(SYMLINK)
 
-$(NAME): $(LIB) $(PF) $(OBJ) $(INC)
+#$(NAME): $(LIB) $(PF) $(OBJ) $(INC)
+$(NAME): $(LIB)  $(OBJ) $(INC)
 		$(GCC) $(F) $(FSHARED) $(OBJ) $(LIB) -o $(NAME) 
 
 $(SYMLINK):
