@@ -52,7 +52,8 @@ int check_curr_block(struct zone_s *zone_ptr,
         goto end;
     }
     if (!block_ptr->next) {
-        next = zone_ptr->md_block_head + zone_ptr->origin_size;
+//        next = zone_ptr->md_block_head + zone_ptr->origin_size;
+    	next = zone_ptr->md_block_head + zone_ptr->space_left;
     } else {
         next = block_ptr->next;
     }

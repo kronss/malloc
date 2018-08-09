@@ -30,9 +30,9 @@ void show_meta_block(struct block_s * block_ptr)
 
 			total_alloc += diff;
 		}
-//		else {
-//			printf("\t %p - %p : %ld bytes are free\n", block_ptr, block_ptr->next, block_ptr->alloc_size);
-//		}
+		else {
+			printf("\t %p - %p : %ld bytes are free\n", block_ptr, block_ptr->next, block_ptr->alloc_size);
+		}
 		block_ptr = block_ptr->next;
 	}
 }

@@ -69,10 +69,16 @@ struct malloc_meneger_s {
 
 
 
+//enum zone_size_e {
+//	TINY_ZONE  = PAGE_SIZE < 4096 ? 4096 : PAGE_SIZE,
+//	SMALL_ZONE = TINY_ZONE * 100,
+//	LARGE_ZONE = SMALL_ZONE + 1,   //TODO: rework!
+//};
+
 enum zone_size_e {
-	TINY_ZONE  = PAGE_SIZE < 4096 ? 4096 : PAGE_SIZE,
-	SMALL_ZONE = TINY_ZONE * 100,
-	LARGE_ZONE = SMALL_ZONE + 1,   //TODO: rework!
+	TINY_ZONE  = PAGE_SIZE < 2,
+	SMALL_ZONE = PAGE_SIZE < 8,
+	LARGE_ZONE = PAGE_SIZE < 12,
 };
 
 enum zone_treshold_e{
