@@ -7,7 +7,7 @@ NAME = libft_malloc_$(HOSTTYPE).so
 SYMLINK = libft_malloc.so
 
 
-GCC = gcc
+CC = gcc
 
 #F = -Wall -Wextra -Werror -fPIC
 F = -Wall -Wextra  -fPIC
@@ -15,7 +15,7 @@ FSHARED = -shared -fPIC
 
 
 #*** libft ********************************************************************#
-LIB_PATH = libft
+LIB_PATH = ./libft
 LIB_INC = $(LIB_PATH)/include
 LIB = $(LIB_PATH)/libft.a
 
@@ -29,7 +29,7 @@ PF = $(PF_PATH)/libftprintf.a
 # HEADER
 #******************************************************************************#
 #INC_FILE_NAME = malloc.h
-INC_DIR = include
+INC_DIR = ./include
 #INC = $(addprefix $(INC_DIR)/, $(INC_FILE_NAME))
 
 
@@ -51,7 +51,7 @@ OBJ_DIR = .obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(OBJ_FILE_NAME))
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	$(GCC) $(F) -o $@ -c $< -I$(INC_DIR) -I$(LIB_INC)
+	$(CC) $(F) -o $@ -c $< -I$(INC_DIR) -I$(LIB_INC)
 
 $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
@@ -64,7 +64,7 @@ all: $(NAME) $(SYMLINK)
 
 #$(NAME): $(LIB) $(PF) $(OBJ) $(INC)
 $(NAME): $(LIB)  $(OBJ) $(INC)
-		$(GCC) $(F) $(FSHARED) $(OBJ) $(LIB) -o $(NAME) 
+		$(CC) $(F) $(FSHARED) $(OBJ) $(LIB) -o $(NAME) 
 
 $(SYMLINK):
 	ln -s $(NAME) $(SYMLINK)
@@ -110,8 +110,11 @@ printf.re:
 
 
 test: all
-	gcc -c src/main.c -o .obj/main.o
-	gcc .obj/main.o $(OBJ) $(LIB)  -o a.out 
+	$(CC) src/main.c libft_malloc.so -Wl,-rpath=.
+	
+#	gcc src/main.c -o a.out -I./include #-I$(LIB_INC)# -fPIC libft_malloc.so
+	
+	#gcc .obj/main.o $(OBJ) $(LIB)  -o a.out 
 	
 
 
@@ -123,7 +126,7 @@ DEBUGBIN = a.debug
 # 	next_sort_3_b.c last_sort_3_b.c add_function.c optimization.c sorting_logic.c  print_operation.c $(INCL)
 
 bug:
-	$(GCC) -g $(F) -o $(NAME) $(SRC) src/main.c $(LIB) -I$(INC_DIR) -I$(LIB_INC)
+	$(CC) -g $(F) -o $(NAME) $(SRC) src/main.c $(LIB) -I$(INC_DIR) -I$(LIB_INC)
 
 debug: bug
 	lldb $(NAME)

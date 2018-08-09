@@ -52,8 +52,8 @@ int check_curr_block(struct zone_s *zone_ptr,
         goto end;
     }
     if (!block_ptr->next) {
-//        next = zone_ptr->md_block_head + zone_ptr->origin_size;
-    	next = zone_ptr->md_block_head + zone_ptr->space_left;
+        next = zone_ptr->md_block_head + zone_ptr->origin_size;
+//    	next = zone_ptr->md_block_head + zone_ptr->space_left;
     } else {
         next = block_ptr->next;
     }
@@ -203,7 +203,7 @@ void *malloc(size_t size)
 	}
 	if (size < (size_t) (-sizeof(struct block_s))) {
 		ALIGN_META_INFO(size);
-		printf("size == %zu\n", size); //debug
+		printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
 	}
 	retval = get_ptr(size);
 end:

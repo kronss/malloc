@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include "../include/malloc.h"
+//#include <stdio.h>
+//#include "malloc.h"
 
 /*
  * ◦  mmap(2)
@@ -66,7 +66,7 @@ calloc
 //    return (0);
 //}
 
-
+//
 //int main ()
 //{
 //int i;
@@ -91,8 +91,8 @@ char * addr;
 i = 0;
 while (i <1024)
 {
-	addr = (char *) malloc (1024);
-	show_alloc_mem();
+	addr = (char *) malloc (102400);
+//	show_alloc_mem();
 	printf("i = %i\n", i);
 	printf("p = %p\n", addr);
 

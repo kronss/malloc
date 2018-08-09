@@ -6,6 +6,9 @@
 #include <pthread.h>
 #include <stdint.h> /*uint8_t*/
 #include <stdio.h> /*printf remove*/
+#include <unistd.h> /*getpagesize*/
+
+//#include "libft.h"
 
 
 
@@ -76,9 +79,9 @@ struct malloc_meneger_s {
 //};
 
 enum zone_size_e {
-	TINY_ZONE  = PAGE_SIZE < 2,
-	SMALL_ZONE = PAGE_SIZE < 8,
-	LARGE_ZONE = PAGE_SIZE < 12,
+	TINY_ZONE  = 4096 * 2,
+	SMALL_ZONE = 4096 * 16,
+	LARGE_ZONE = 4096 * 30,
 };
 
 enum zone_treshold_e{

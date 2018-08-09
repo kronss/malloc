@@ -38,7 +38,7 @@ static inline void merge_two_free_blocks(struct block_s *a, struct block_s *b)
 			b->next->prev = a;
 		}
 
-		memset(b, 0, sizeof(struct block_s));
+//		ft_memset(b, 0, sizeof(struct block_s));
     }
 }
 
@@ -52,7 +52,7 @@ static inline void try_defragment(struct zone_s *zone_ptr, struct block_s *block
     }
 }
 
-static inline static void return_free_block_to_pull(struct zone_s *zone_ptr, struct block_s *block_ptr)
+static inline void return_free_block_to_pull(struct zone_s *zone_ptr, struct block_s *block_ptr)
 {
     block_ptr->free = 1;
     zone_ptr->space_left += block_ptr->alloc_size;
@@ -114,8 +114,8 @@ end:
 
 static void remove_cur_zone(struct zone_s *zone_ptr)
 {
-	struct zone_s *zone_next = zone_ptr->next;
-	struct zone_s *zone_prev = zone_ptr->prev;
+//	struct zone_s *zone_next = zone_ptr->next;
+//	struct zone_s *zone_prev = zone_ptr->prev;
 //
 //	if (zone_ptr->next)
 //
