@@ -40,7 +40,8 @@ INC_DIR = ./include
 SRC_FILE_NAME =		malloc.c \
 					show_alloc_mem.c \
 					free.c \
-					alloc_meneger_api.c
+					alloc_meneger_api.c \
+					defragmentation.c
 
 SRC_DIR = src
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILE_NAME))

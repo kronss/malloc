@@ -1,4 +1,4 @@
-#include <malloc.h>
+#include "malloc_internal_api.h"
 
 
 pthread_mutex_t mutex_malloc = PTHREAD_MUTEX_INITIALIZER;

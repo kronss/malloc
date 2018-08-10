@@ -1,63 +1,5 @@
-#include <malloc.h>
+#include "malloc_internal_api.h"
 #include <stddef.h> /*offsetof*/
-
-static inline int is_prev_free(struct block_s *block_ptr)
-{
-    int ret_val = 0;
-
-    if (block_ptr->prev) {
-        if (block_ptr->prev->free) {
-            ret_val = 1;
-        }
-    }
-
-    return ret_val;
-}
-
-static inline int is_next_free(struct block_s *block_ptr)
-{
-    int ret_val = 0;
-
-    if (block_ptr->next) {
-        if (block_ptr->next->free) {
-            ret_val = 1;
-        }
-    }
-
-    return ret_val;
-}
-
-static inline void merge_two_free_blocks(struct block_s *a, struct block_s *b)
-{
-    if (a && b) {
-
-    	a->next = b->next;
-		a->alloc_size += b->alloc_size;
-
-		if (b->next) {
-			b->next->prev = a;
-		}
-
-//		ft_memset(b, 0, sizeof(struct block_s));
-    }
-}
-
-static inline void try_defragment(struct zone_s *zone_ptr, struct block_s *block_ptr)
-{
-    if (is_next_free(block_ptr)) {
-        merge_two_free_blocks(block_ptr, block_ptr->next);
-    }
-    if (is_prev_free(block_ptr)) {
-        merge_two_free_blocks(block_ptr->prev, block_ptr);
-    }
-}
-
-static inline void return_free_block_to_pull(struct zone_s *zone_ptr, struct block_s *block_ptr)
-{
-    block_ptr->free = 1;
-    zone_ptr->space_left += block_ptr->alloc_size;
-}
-
 
 int check_block_ptr(struct zone_s *zone_ptr, struct block_s *block_ptr)
 {
@@ -148,7 +90,6 @@ void free(void *ptr)
 		goto end;
 	}
     return_free_block_to_pull(zone_ptr, block_ptr);
-	try_defragment(zone_ptr, block_ptr);
 	if (is_all_blocks_free(zone_ptr))
 		remove_cur_zone(zone_ptr);
 
