@@ -1,6 +1,7 @@
 #include "malloc_internal_api.h"
 
-int need_realloc_in_same_zone(struct zone_s *zone_ptr, struct block_s *block_ptr, size_t new_size)
+//int need_realloc_in_same_zone(struct zone_s *zone_ptr, struct block_s *block_ptr, size_t new_size)
+int need_realloc_in_same_zone(struct block_s *block_ptr, size_t new_size)
 {
 	int ret_val = 0;
 
@@ -56,7 +57,8 @@ static void *do_realloc(struct zone_s *zone_ptr, struct block_s *block_ptr, size
 {
 	void *ret_val = NULL;
 
-	if (need_realloc_in_same_zone(zone_ptr, block_ptr, new_size)) {
+//	if (need_realloc_in_same_zone(zone_ptr, block_ptr, new_size)) {
+	if (need_realloc_in_same_zone(block_ptr, new_size)) {
 		do_realloc_in_same_zone(zone_ptr, block_ptr, new_size);
 	}
 	else {

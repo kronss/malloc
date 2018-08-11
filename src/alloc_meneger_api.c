@@ -5,7 +5,8 @@ pthread_mutex_t mutex_malloc = PTHREAD_MUTEX_INITIALIZER;
 
 struct malloc_meneger_s malloc_meneger_g =
 {
-    .zone_heads = {NULL, NULL, NULL}
+    .zone_heads = {NULL, NULL, NULL},
+	.print_total_alloc = 0,
 };
 
 void *get_zone_head(size_t size)

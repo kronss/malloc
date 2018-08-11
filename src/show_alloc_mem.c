@@ -1,9 +1,5 @@
 #include "malloc_internal_api.h"
 
-
-static int total_alloc;
-
-
 static inline const char *get_zone_type(zone_type)
 {
 	const char *retval;
@@ -23,11 +19,9 @@ void show_meta_block(struct block_s * block_ptr)
 	while(block_ptr)
 	{
 		if (!block_ptr->free) {
-
 			diff = (int8_t *)block_ptr->next - (int8_t *)block_ptr;
 			printf("\t %p - %p : %ld bytes\n", block_ptr, block_ptr->next, diff);
-
-			total_alloc += diff;
+			malloc_meneger_g.print_total_alloc += diff;
 		}
 		else {
 			printf("\t %p - %p : %ld bytes are free\n", block_ptr, block_ptr->next, block_ptr->alloc_size);
@@ -35,8 +29,6 @@ void show_meta_block(struct block_s * block_ptr)
 		block_ptr = block_ptr->next;
 	}
 }
-
-
 
 void show_alloc_zone(enum zone_type_e zone_type)
 {
@@ -56,13 +48,13 @@ void show_alloc_mem()
 	enum zone_type_e zone_type;
 
 	pthread_mutex_lock(&mutex_malloc);
-	total_alloc = 0;
+	malloc_meneger_g.print_total_alloc = 0;
 	zone_type = MIN_ZONE_TYPE;
 	while (zone_type < MAX_ZONE_TYPE) {
 		show_alloc_zone(zone_type);
 		++zone_type;
 	}
-	printf("Total : %d bytes\n", total_alloc);
+	printf("Total : %zu bytes\n", malloc_meneger_g.print_total_alloc);
 
 	pthread_mutex_unlock(&mutex_malloc);
 }

@@ -9,16 +9,16 @@ void free(void *ptr)
 	if (ptr == NULL) {
 		goto end;
 	}
-	printf("%s:%d: ptr %p\n", __func__, __LINE__, ptr); //debug
+//	printf("%s:%d: ptr %p\n", __func__, __LINE__, ptr); //debug
 	block_ptr = get_ptr_to_md(ptr);
-	printf("%s:%d: ptr %p\n", __func__, __LINE__, ptr); //debug
+//	printf("%s:%d: ptr %p\n", __func__, __LINE__, ptr); //debug
 
 	if (validate_md(&zone_ptr, &block_ptr)) {
 		goto end;
 	}
 	free_defragment_unmap(zone_ptr, block_ptr);
 
-	printf("%s:%d: bingo! %p\n", __func__, __LINE__, ptr); //debug
+//	printf("%s:%d: bingo! %p\n", __func__, __LINE__, ptr); //debug
 end:
 	pthread_mutex_unlock(&mutex_malloc);
 }

@@ -89,7 +89,12 @@ clean.light:
 	rm -rf $(OBJ) .obj/main.o
 
 rew: clean.light all test
-	/usr/bin/time -l ./a.out
+	/usr/bin/time ./a.out
+#	/usr/bin/time -l ./a.out
+
+test: all
+	$(CC) src/main.c -c -o .obj/main.o -I./include
+	$(CC) .obj/main.o $(SYMLINK) 
 
 
 #** rules * libft *************************************************************#
@@ -119,9 +124,7 @@ printf.re:
 	make -C $(PF_PATH)/ re
 
 
-test: all
-	$(CC) src/main.c -c -o .obj/main.o -I./include
-	$(CC) .obj/main.o $(SYMLINK) 
+
 	
 #	$(CC) src/main.c libft_malloc.so -Wl,-rpath=. -I./include
 	

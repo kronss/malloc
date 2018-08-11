@@ -41,7 +41,8 @@ static inline void merge_two_free_blocks(struct block_s *a, struct block_s *b)
     }
 }
 
-static void try_defragment(struct zone_s *zone_ptr, struct block_s *block_ptr)
+//static void try_defragment(struct zone_s *zone_ptr, struct block_s *block_ptr)
+static void try_defragment(struct block_s *block_ptr)
 {
     if (is_next_free(block_ptr)) {
         merge_two_free_blocks(block_ptr, block_ptr->next);
@@ -55,5 +56,6 @@ void free_and_return_block_to_pull(struct zone_s *zone_ptr, struct block_s *bloc
 {
     block_ptr->free = 1;
     zone_ptr->space_left += block_ptr->alloc_size;
-    try_defragment(zone_ptr, block_ptr);
+//    try_defragment(zone_ptr, block_ptr);
+    try_defragment(block_ptr);
 }

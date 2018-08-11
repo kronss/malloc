@@ -62,6 +62,7 @@ struct			zone_s
 struct malloc_meneger_s {
     struct zone_s *zone_heads[MAX_ZONE_TYPE];
 //    size_t zone_size[MAX_ZONE_TYPE - 1];
+    size_t print_total_alloc;
 };
 
 

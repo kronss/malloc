@@ -22,7 +22,7 @@ void *create_new_block(struct zone_s *zone_ptr,
 
     new_block_ptr = (struct block_s *)((uint8_t*)block_ptr + size);
     new_block_ptr->alloc_size = block_ptr->alloc_size - size;
-    printf("%s:%d:%zu\n", __func__, __LINE__, new_block_ptr->alloc_size);
+//    printf("%s:%d:%zu\n", __func__, __LINE__, new_block_ptr->alloc_size);
     new_block_ptr->free = 1;
     new_block_ptr->next = block_ptr->next;
     new_block_ptr->prev = block_ptr;
@@ -34,7 +34,7 @@ void *create_new_block(struct zone_s *zone_ptr,
 
     zone_ptr->space_left -= size;
 
-    printf("%s:%d:%p\n", __func__, __LINE__, block_ptr->data);
+//    printf("%s:%d:%p\n", __func__, __LINE__, block_ptr->data);
     return block_ptr;
 }
 
@@ -132,7 +132,7 @@ void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone)
     default:    raw_ptr = NULL    ;    goto end;
     }
     ALIGN_PAGE_SIZE(size_zone);
-    printf("%s:%d: size_zone %zu\n", __func__, __LINE__, size_zone);
+//    printf("%s:%d: size_zone %zu\n", __func__, __LINE__, size_zone);
 
     raw_ptr = mmap(NULL, size_zone, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 	if (raw_ptr == MAP_FAILED) {
@@ -154,7 +154,7 @@ void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone)
     block_ptr->prev = NULL;
     block_ptr->alloc_size = zone_ptr->space_left;
     block_ptr->free = 1;
-    printf("%s:%d: ----- %llu\n", __func__, __LINE__, raw_ptr);
+//    printf("%s:%d: ----- %llu\n", __func__, __LINE__, raw_ptr);
 end:
     return raw_ptr ;
 }
@@ -169,7 +169,7 @@ void *get_ptr_from_zone(size_t size, enum zone_type_e zone_type)
             return NULL;
         }
     }
-	printf("%s:%d\n", __func__, __LINE__); //debug
+//	printf("%s:%d\n", __func__, __LINE__); //debug
 
     retval = find_available_zone(size, malloc_meneger_g.zone_heads[zone_type], zone_type);
 
@@ -200,12 +200,12 @@ void *malloc(size_t size)
 	if (size <= 0) {
 	    goto end;
 	}
-	printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
+//	printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
 	if (size < (size_t) (-sizeof(struct block_s))) {
 		ALIGN_META_INFO(size);
 //		printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
 	}
-	printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
+//	printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
 	retval = get_ptr(size);
 	retval += ((size_t)&((struct block_s *)0)->data);
 end:
