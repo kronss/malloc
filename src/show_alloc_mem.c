@@ -1,5 +1,4 @@
 #include "malloc_internal_api.h"
-#include <stdio.h> //printf
 
 
 static int total_alloc;

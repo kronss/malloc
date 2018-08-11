@@ -21,3 +21,13 @@ void *get_zone_ptr(size_t size)
     }
     return retval;
 }
+
+
+//TODO: move to internal API
+void *get_ptr_to_md(void *ptr)
+{
+	void *ret_val;
+//	ret_val = ptr - offsetof(struct block_s, data);
+	ret_val = ptr - ((size_t)&((struct block_s *)0)->data);
+	return ret_val;
+}

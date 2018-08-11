@@ -37,11 +37,13 @@ INC_DIR = ./include
 # SOURCES/OBJECT
 #******************************************************************************#
 
-SRC_FILE_NAME =		malloc.c \
-					show_alloc_mem.c \
-					free.c \
-					alloc_meneger_api.c \
-					defragmentation.c
+SRC_FILE_NAME =		malloc.c               \
+					show_alloc_mem.c       \
+					free.c                 \
+					alloc_meneger_api.c    \
+					defragmentation.c      \
+					realloc.c              \
+#add .c file -->
 
 SRC_DIR = src
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILE_NAME))
@@ -52,7 +54,7 @@ OBJ_DIR = .obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(OBJ_FILE_NAME))
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	$(CC) $(F) -o $@ -c $< -I$(INC_DIR) -I$(LIB_INC)
+	$(CC) $(F) -o $@ -c $< -I$(INC_DIR) -I$(LIB_INC) -I./src
 
 $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
@@ -64,7 +66,7 @@ $(OBJ_DIR):
 all: $(NAME) $(SYMLINK)
 
 #$(NAME): $(LIB) $(PF) $(OBJ) $(INC)
-$(NAME): $(LIB)  $(OBJ) $(INC)
+$(NAME): $(LIB)  $(OBJ) $(INC) src/malloc_internal_api.h
 		$(CC) $(F) $(FSHARED) $(OBJ) $(LIB) -o $(NAME) 
 
 $(SYMLINK):
@@ -81,6 +83,12 @@ fclean: libft.fclean printf.fclean clean
 	rm -f $(NAME) $(SYMLINK) a.out
 
 re: fclean all
+
+clean.light:
+	rm -rf $(OBJ) .obj/main.o
+
+rew: clean.light all test
+	/usr/bin/time -l ./a.out
 
 
 #** rules * libft *************************************************************#
@@ -111,7 +119,10 @@ printf.re:
 
 
 test: all
-	$(CC) src/main.c libft_malloc.so -Wl,-rpath=.
+	$(CC) src/main.c -c -o .obj/main.o -I./include
+	$(CC) .obj/main.o $(SYMLINK) 
+	
+#	$(CC) src/main.c libft_malloc.so -Wl,-rpath=. -I./include
 	
 #	gcc src/main.c -o a.out -I./include #-I$(LIB_INC)# -fPIC libft_malloc.so
 	

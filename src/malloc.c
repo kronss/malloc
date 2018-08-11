@@ -1,4 +1,4 @@
-#include <unistd.h>
+//#include <unistd.h>
 #include "malloc_internal_api.h"
 
 
@@ -200,10 +200,12 @@ void *malloc(size_t size)
 	if (size <= 0) {
 	    goto end;
 	}
+	printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
 	if (size < (size_t) (-sizeof(struct block_s))) {
 		ALIGN_META_INFO(size);
-		printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
+//		printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
 	}
+	printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
 	retval = get_ptr(size);
 end:
     pthread_mutex_unlock(&mutex_malloc);

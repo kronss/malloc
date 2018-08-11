@@ -1,14 +1,16 @@
 #ifndef MALLOC_INTERNAL_API_H
 # define MALLOC_INTERNAL_API_H
 
+#include "malloc.h"
+#include "libft.h"
+
 #include <sys/user.h> /* PAGE_SIZE */
 #include <sys/mman.h>
 #include <pthread.h>
-#include <malloc.h>
 #include <stdint.h> /*uint8_t*/
-#include <stdio.h> /*printf remove*/
 #include <unistd.h> /*getpagesize*/
-#include "libft.h"
+//#include <stddef.h> /*offsetof*/
+#include <unistd.h>
 
 
 //#include "libft.h"
@@ -74,18 +76,17 @@ struct malloc_meneger_s {
 
 
 
+enum zone_size_e {
+	TINY_ZONE  = PAGE_SIZE * 1  ,
+	SMALL_ZONE = PAGE_SIZE * 1500,
+	LARGE_ZONE = PAGE_SIZE * 30,
+};
 
 //enum zone_size_e {
-//	TINY_ZONE  = PAGE_SIZE < 4096 ? 4096 : PAGE_SIZE,
-//	SMALL_ZONE = TINY_ZONE * 100,
-//	LARGE_ZONE = SMALL_ZONE + 1,   //TODO: rework!
+//	TINY_ZONE  = 4096 * 1,
+//	SMALL_ZONE = 4096 * 160,
+//	LARGE_ZONE = 4096 * 1000,
 //};
-
-enum zone_size_e {
-	TINY_ZONE  = 4096 * 2,
-	SMALL_ZONE = 4096 * 16,
-	LARGE_ZONE = 4096 * 30,
-};
 
 enum zone_treshold_e{
     TINY_TRESHHOLD = TINY_ZONE / 100,

@@ -1,5 +1,4 @@
 #include "malloc_internal_api.h"
-#include <stddef.h> /*offsetof*/
 
 int check_block_ptr(struct zone_s *zone_ptr, struct block_s *block_ptr)
 {
@@ -54,24 +53,33 @@ end:
 	return ret_val;
 }
 
-static void remove_cur_zone(struct zone_s *zone_ptr)
-{
-//	struct zone_s *zone_next = zone_ptr->next;
-//	struct zone_s *zone_prev = zone_ptr->prev;
-//
-//	if (zone_ptr->next)
-//
 
+
+
+static void remove_cur_zone_to_pull(struct zone_s *zone_ptr)
+{
+    enum zone_type_e zone_type = MIN_ZONE_TYPE;
+	struct zone_s *zone_next = zone_ptr->next;
+	struct zone_s *zone_prev = zone_ptr->prev;
+
+	if (zone_prev)
+		zone_prev->next = zone_next;
+	else
+	{
+		while (zone_type < MAX_ZONE_TYPE)
+		{
+			if (malloc_meneger_g.zone_heads[zone_type] == zone_ptr)
+				malloc_meneger_g.zone_heads[zone_type] = zone_next;
+			++zone_type;
+		}
+	}
+	if (zone_next)
+		zone_prev->prev = zone_prev;
+	munmap(zone_ptr, zone_ptr->origin_size); // + sizeof(t_page));
 }
 
-//TODO: move to internal API
-void *get_ptr_to_md(void *ptr)
-{
-	void *ret_val;
 
-	ret_val = ptr - offsetof(struct block_s, data);
-	return ret_val;
-}
+
 
 void free(void *ptr)
 {
@@ -91,7 +99,7 @@ void free(void *ptr)
 	}
     return_free_block_to_pull(zone_ptr, block_ptr);
 	if (is_all_blocks_free(zone_ptr))
-		remove_cur_zone(zone_ptr);
+		remove_cur_zone_to_pull(zone_ptr);
 
 
 	printf("%s:%d: bingo! %p\n", __func__, __LINE__, ptr); //debug
