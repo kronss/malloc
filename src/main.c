@@ -25,7 +25,7 @@ calloc
 //pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
-//
+////
 //int main(int ac, char **av)
 //{
 //    char *ptr0 = NULL;
@@ -48,6 +48,8 @@ calloc
 //    	free(ptr0);
 //    	free(ptr1);
 //    	free(ptr2);
+//        show_alloc_mem();
+//
 //    	free(ptr3);
 //
 //    show_alloc_mem();
@@ -75,6 +77,8 @@ calloc
 //i = 0;
 //while (i <1024)
 //{
+////	addr = (char*)malloc(1024);
+////	addr[0] = 42;
 //i ++;
 //}
 //
@@ -83,23 +87,44 @@ calloc
 //return (0);
 //}
 
-int main ()
-{
-int i;
-char * addr;
-
-i = 0;
-while (i < 1024)
-{
-//	addr = (char *) malloc (1024);
-////	printf("i = %i\n", i);
-////	printf("p = %p\n", addr);
+//int main ()
+//{
+//int i;
+//char * addr;
 //
-//	addr [0] = 42;
-	i ++;
+//i = 0;
+////while (i < 1024)
+////{
+////	addr = (char *) malloc (1024);
+//////	printf("i = %i\n", i);
+//////	printf("p = %p\n", addr);
+////
+////	addr [0] = 42;
+////	free(0x01);
+////	i ++;
+////}
+//show_alloc_mem();
+//
+//
+//return (0);
+//}
+
+
+void print(char *s)
+{
+write(1, s, strlen(s));
 }
+
+int main()
+{
+char *addr;
+
+addr = malloc(16);
 show_alloc_mem();
-
-
-return (0);
+free(NULL);
+free((void *)addr + 5);
+show_alloc_mem();
+if (realloc((void *)addr + 5, 10) == NULL)
+print("Bonjour\n");
+show_alloc_mem();
 }

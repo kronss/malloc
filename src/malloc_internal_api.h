@@ -8,22 +8,18 @@
 #include <sys/mman.h>
 #include <pthread.h>
 #include <stdint.h> /*uint8_t*/
-#include <unistd.h> /*getpagesize*/
+//#include <unistd.h> /*getpagesize*/
 //#include <stddef.h> /*offsetof*/
 #include <unistd.h>
 
 
-//#include "libft.h"
+//#define ALIGN_PAGE_SIZE(len_) (len_) = ((PAGE_SIZE - 1) & (len_)) ? (((len_) + PAGE_SIZE) & ~(PAGE_SIZE - 1)) : (len_)
+//
+//#define METABLOCK_SIZE sizeof(struct s_block)
+//
+//#define ALIGN_WORD(x) (((((x) - 1) >> 2) << 2) + 4)  //TODO: re work
+//#define ALIGN_META_INFO(x) (x) = ALIGN_WORD((x) + sizeof(struct block_s))  //TODO: re work
 
-
-
-#define ALIGN_PAGE_SIZE(len_) (len_) = ((PAGE_SIZE - 1) & (len_)) ? (((len_) + PAGE_SIZE) & ~(PAGE_SIZE - 1)) : (len_)
-
-
-#define ALIGN_WORD(x) (((((x) - 1) >> 2) << 2) + 4)  //TODO: re work
-#define ALIGN_META_INFO(x) (x) = ALIGN_WORD((x) + sizeof(struct block_s))  //TODO: re work
-
-#define METABLOCK_SIZE sizeof(struct s_block)
 
 enum zone_type_e {
 	MIN_ZONE_TYPE,
@@ -65,11 +61,16 @@ struct			zone_s
 
 struct malloc_meneger_s {
     struct zone_s *zone_heads[MAX_ZONE_TYPE];
-//    size_t malloc_call[MAX_ZONE_TYPE];
+//    size_t zone_size[MAX_ZONE_TYPE - 1];
 };
 
 
 
+
+#define ALIGN_PAGE_SIZE(len_) (len_) = ((PAGE_SIZE - 1) & (len_)) ? (((len_) + PAGE_SIZE) & ~(PAGE_SIZE - 1)) : (len_)
+#define METABLOCK_SIZE sizeof(struct block_s)
+#define ALIGN_WORD(x) (((((x) - 1) >> 2) << 2) + 4)  //TODO: re work
+#define ALIGN_META_INFO(x) (x) = ALIGN_WORD((x) + sizeof(struct block_s))  //TODO: re work
 
 
 
@@ -96,7 +97,17 @@ enum zone_treshold_e{
 };
 
 
-void return_free_block_to_pull(struct zone_s *zone_ptr, struct block_s *block_ptr);
+void free_and_return_block_to_pull(struct zone_s *zone_ptr, struct block_s *block_ptr);
+void *get_ptr_to_md(void *ptr);
+int check_block_ptr(struct zone_s *zone_ptr, struct block_s *block_ptr);
+int validate_md(struct zone_s **zone_ptr, struct block_s **block_ptr);
+void *get_zone_head(size_t size);
+void *get_ptr(size_t size);
+void remove_cur_zone_to_pull(struct zone_s *zone_ptr);
+int is_all_blocks_free(struct zone_s *zone_ptr);
+void free_defragment_unmap(struct zone_s *zone_ptr, struct block_s *block_ptr);
+
+
 
 
 

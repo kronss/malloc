@@ -35,7 +35,7 @@ void *create_new_block(struct zone_s *zone_ptr,
     zone_ptr->space_left -= size;
 
     printf("%s:%d:%p\n", __func__, __LINE__, block_ptr->data);
-    return block_ptr->data;
+    return block_ptr;
 }
 
 static inline
@@ -122,27 +122,27 @@ void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone)
     void           *raw_ptr;
     struct zone_s  *zone_ptr;
     struct block_s *block_ptr;
-    size_t          size;
+    size_t          size_zone;
 
     switch (zone_type) {
-    case TINY:  size = TINY_ZONE  ;    break;
-    case SMALL: size = SMALL_ZONE ;    break;
-    case LARGE: size = LARGE_ZONE ;    break;
+    case TINY:  size_zone = TINY_ZONE  ;    break;
+    case SMALL: size_zone = SMALL_ZONE ;    break;
+    case LARGE: size_zone = LARGE_ZONE ;    break;
 
     default:    raw_ptr = NULL    ;    goto end;
     }
-    ALIGN_PAGE_SIZE(size);
-    printf("%s:%d: page size %zu\n", __func__, __LINE__, size);
+    ALIGN_PAGE_SIZE(size_zone);
+    printf("%s:%d: size_zone %zu\n", __func__, __LINE__, size_zone);
 
-    raw_ptr = mmap(NULL, size, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+    raw_ptr = mmap(NULL, size_zone, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 	if (raw_ptr == MAP_FAILED) {
 		raw_ptr = NULL;
 		goto end;
 	}
 
 	zone_ptr = (struct zone_s *)raw_ptr;
-	zone_ptr->origin_size = size;
-	zone_ptr->space_left = size - sizeof(struct zone_s) - sizeof(struct block_s);
+	zone_ptr->origin_size = size_zone;
+	zone_ptr->space_left = size_zone - sizeof(struct zone_s) - sizeof(struct block_s);
 	zone_ptr->next = NULL;
 	zone_ptr->prev = prev_zone;
 	if (prev_zone) {
@@ -207,6 +207,7 @@ void *malloc(size_t size)
 	}
 	printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
 	retval = get_ptr(size);
+	retval += ((size_t)&((struct block_s *)0)->data);
 end:
     pthread_mutex_unlock(&mutex_malloc);
     return retval;

@@ -43,6 +43,7 @@ SRC_FILE_NAME =		malloc.c               \
 					alloc_meneger_api.c    \
 					defragmentation.c      \
 					realloc.c              \
+					unmmap.c               \
 #add .c file -->
 
 SRC_DIR = src
