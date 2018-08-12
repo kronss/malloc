@@ -20,13 +20,14 @@ void show_meta_block(struct block_s * block_ptr)
 	{
 		if (!block_ptr->free) {
 			diff = (int8_t *)block_ptr->next - (int8_t *)block_ptr;
-			printf("\t %p - %p : %ld bytes\n", block_ptr, block_ptr->next, diff);
+			printf("\t %p - %11p : diff %10ld : %zu bytes\n", block_ptr, block_ptr->next, diff, block_ptr->alloc_size);
 			malloc_meneger_g.print_total_alloc += diff;
 		}
 		else {
-			printf("\t %p - %p : %ld bytes are free\n", block_ptr, block_ptr->next, block_ptr->alloc_size);
+			printf("\t %p - %11p : diff %10ld : %zu bytes are freed\n", block_ptr, block_ptr->next, 0, block_ptr->alloc_size);
 		}
 		block_ptr = block_ptr->next;
+//		sleep(1);
 	}
 }
 

@@ -76,7 +76,8 @@ struct malloc_meneger_s {
 
 
 
-
+// silversearcher-ag
+// ag
 
 
 enum zone_size_e {
@@ -108,7 +109,7 @@ void *get_ptr(size_t size);
 void remove_cur_zone_to_pull(struct zone_s *zone_ptr);
 int is_all_blocks_free(struct zone_s *zone_ptr);
 void free_defragment_unmap(struct zone_s *zone_ptr, struct block_s *block_ptr);
-
+void *create_new_block(struct zone_s *zone_ptr, struct block_s *block_ptr, size_t size);
 
 
 

@@ -1,5 +1,8 @@
 #include "malloc_internal_api.h"
 
+void *do_realloc_in_same_zone(struct zone_s *zone_ptr, struct block_s *old_block_ptr, size_t new_size);
+
+
 //int need_realloc_in_same_zone(struct zone_s *zone_ptr, struct block_s *block_ptr, size_t new_size)
 int need_realloc_in_same_zone(struct block_s *block_ptr, size_t new_size)
 {
@@ -34,22 +37,70 @@ printf("%s:%d:ret_val == %d\n", __func__, __LINE__, ret_val); //debug
 	return ret_val;
 }
 
+
+void *expand_curr_block(struct zone_s *zone_ptr,
+                       struct block_s *block_ptr,
+                       size_t new_size)
+{
+    struct block_s *old_next_block_ptr = block_ptr->next;
+    struct block_s *next_block_ptr = NULL;
+
+	zone_ptr->space_left += block_ptr->alloc_size;
+
+	next_block_ptr = (struct block_s *)((uint8_t *)block_ptr + new_size);
+
+//    printf("%s:%d:%p\n", __func__, __LINE__, block_ptr);
+//    printf("%s:%d:%p\n", __func__, __LINE__, next_block_ptr);
+//    printf("%s:%d:%zu\n", __func__, __LINE__, new_block_ptr->alloc_size);
+    next_block_ptr->alloc_size = old_next_block_ptr->alloc_size - (new_size - block_ptr->alloc_size);
+//    printf("%s:%d:%zu\n", __func__, __LINE__, new_block_ptr->alloc_size);
+    next_block_ptr->free = 1;
+    next_block_ptr->next = old_next_block_ptr->next;
+    next_block_ptr->prev = block_ptr;
+
+    block_ptr->alloc_size = new_size;
+    block_ptr->free = 0;
+    block_ptr->next = next_block_ptr;
+//    printf("%s:%d:%p\n", __func__, __LINE__, block_ptr->next);
+//    printf("%s:%d:%p\n", __func__, __LINE__, next_block_ptr);
+//    block_ptr->prev =
+
+    zone_ptr->space_left -= block_ptr->alloc_size;
+
+    printf("%s:%d:%p\n", __func__, __LINE__, block_ptr);
+    return block_ptr;
+}
+
+
+
+
+
 void *do_realloc_in_same_zone(struct zone_s *zone_ptr, struct block_s *old_block_ptr, size_t new_size)
 {
-	struct block_s *new_block_ptr = NULL;
+//	struct block_s *new_block_ptr = NULL;
+	void *new_block_ptr = NULL;
+
 
 	printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
 
 	if (can_be_expanded(old_block_ptr, new_size)) {
 		/*Expand zone*/
-		zone_ptr->space_left += old_block_ptr->alloc_size;
-		new_block_ptr = old_block_ptr;
-		new_block_ptr->alloc_size = old_block_ptr->alloc_size + old_block_ptr->next->alloc_size - METABLOCK_SIZE;
-		new_block_ptr = create_new_block(zone_ptr, new_block_ptr, new_size);
+		  printf("%s:%d: old_block_ptr       == %p\n", __func__, __LINE__, old_block_ptr);
+		  printf("%s:%d: old_block_ptr->next == %p\n", __func__, __LINE__, old_block_ptr->next);
+		  printf("%s:%d: new_block_ptr       == %p\n", __func__, __LINE__, new_block_ptr);
+//		  printf("%s:%d: new_block_ptr->next == %p\n", __func__, __LINE__, new_block_ptr->next);
+
+
+//		new_block_ptr->alloc_size = old_block_ptr->alloc_size + old_block_ptr->next->alloc_size - METABLOCK_SIZE;
+		new_block_ptr = expand_curr_block(zone_ptr, old_block_ptr, new_size);
+
+//		((struct block_s *)new_block_ptr)->next = old_block_ptr->next->next;
 //		new_block_ptr->alloc_size = new_size;
 //		zone_ptr->space_left -= new_block_ptr->alloc_size;
-		  printf("%s:%d: ----- %llu\n", __func__, __LINE__, old_block_ptr);
-		  printf("%s:%d: ----- %llu\n", __func__, __LINE__, new_block_ptr);
+		  printf("%s:%d: old_block_ptr       == %p\n", __func__, __LINE__, old_block_ptr);
+		  printf("%s:%d: old_block_ptr->next == %p\n", __func__, __LINE__, old_block_ptr->next);
+		  printf("%s:%d: new_block_ptr       == %p\n", __func__, __LINE__, new_block_ptr);
+		  printf("%s:%d: new_block_ptr->next == %p\n", __func__, __LINE__, ((struct block_s *)new_block_ptr)->next);
 //		((struct block_s *)new_block_ptr)->next = old_block_ptr->next;
 	} else {
 		printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
@@ -81,6 +132,7 @@ static void *do_realloc(struct zone_s *zone_ptr, struct block_s *block_ptr, size
 		ret_val = do_realloc_in_same_zone(zone_ptr, block_ptr, new_size);
 	}
 	else {
+		printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
 		ret_val = get_ptr(new_size);
 		ft_memmove(ret_val, block_ptr, block_ptr->alloc_size);
 		free_defragment_unmap(zone_ptr, block_ptr);
