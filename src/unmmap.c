@@ -3,7 +3,7 @@
 int is_all_blocks_free(struct zone_s *zone_ptr)
 {
 	int ret_val = 1;
-	struct block_s *block_ptr = zone_ptr->md_block_head;
+	struct block_s *block_ptr = &zone_ptr->md_block_head;
 
 	while (block_ptr) {
 		if (block_ptr->free == 0) {

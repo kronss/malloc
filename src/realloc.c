@@ -5,6 +5,9 @@ int need_realloc_in_same_zone(struct block_s *block_ptr, size_t new_size)
 {
 	int ret_val = 0;
 
+	printf("old == %p\n", get_zone_head(block_ptr->alloc_size)); //debug
+	printf("new == %p\n", get_zone_head(new_size)); //debug
+
 	if (get_zone_head(block_ptr->alloc_size) == get_zone_head(new_size)) {
 		ret_val = 1;
 	}
@@ -17,34 +20,49 @@ int can_be_expanded(struct block_s *block_ptr, size_t new_size)
 	int ret_val = 0;
 	struct block_s *next_block_ptr = block_ptr->next;
 
-	if (!next_block_ptr || next_block_ptr->free)
+	if (!next_block_ptr || !next_block_ptr->free)
 		goto end;
-
-	if (new_size < (block_ptr->alloc_size + next_block_ptr->alloc_size - METABLOCK_SIZE)) {
+//	printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
+//	printf("%s:%d:new_size == %zu\n", __func__, __LINE__, (block_ptr->alloc_size + next_block_ptr->alloc_size - METABLOCK_SIZE)); //debug
+	if (new_size <= (block_ptr->alloc_size + next_block_ptr->alloc_size - METABLOCK_SIZE)) {
 		ret_val = 1;
 	}
 
 end:
+//	printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
+printf("%s:%d:ret_val == %d\n", __func__, __LINE__, ret_val); //debug
 	return ret_val;
 }
 
 void *do_realloc_in_same_zone(struct zone_s *zone_ptr, struct block_s *old_block_ptr, size_t new_size)
 {
-	void *new_block_ptr = NULL;
+	struct block_s *new_block_ptr = NULL;
+
+	printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
 
 	if (can_be_expanded(old_block_ptr, new_size)) {
 		/*Expand zone*/
 		zone_ptr->space_left += old_block_ptr->alloc_size;
-		old_block_ptr->alloc_size = new_size;
-		zone_ptr->space_left -= old_block_ptr->alloc_size;
-		new_block_ptr = old_block_ptr; /*same_ptr*/
+		new_block_ptr = old_block_ptr;
+		new_block_ptr->alloc_size = old_block_ptr->alloc_size + old_block_ptr->next->alloc_size - METABLOCK_SIZE;
+		new_block_ptr = create_new_block(zone_ptr, new_block_ptr, new_size);
+//		new_block_ptr->alloc_size = new_size;
+//		zone_ptr->space_left -= new_block_ptr->alloc_size;
+		  printf("%s:%d: ----- %llu\n", __func__, __LINE__, old_block_ptr);
+		  printf("%s:%d: ----- %llu\n", __func__, __LINE__, new_block_ptr);
+//		((struct block_s *)new_block_ptr)->next = old_block_ptr->next;
 	} else {
-		new_block_ptr = get_ptr(new_size);
-		ft_memmove(new_block_ptr, old_block_ptr, old_block_ptr->alloc_size);
-		free_defragment_unmap(zone_ptr, old_block_ptr);
-	}
+		printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
 
-	return new_block_ptr;
+		new_block_ptr = get_ptr(new_size);
+		printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
+		ft_memmove(new_block_ptr, old_block_ptr, old_block_ptr->alloc_size);
+		printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
+		free_defragment_unmap(zone_ptr, old_block_ptr);
+		printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
+	}
+	printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
+	return (void *)new_block_ptr;
 }
 
 
@@ -59,7 +77,8 @@ static void *do_realloc(struct zone_s *zone_ptr, struct block_s *block_ptr, size
 
 //	if (need_realloc_in_same_zone(zone_ptr, block_ptr, new_size)) {
 	if (need_realloc_in_same_zone(block_ptr, new_size)) {
-		do_realloc_in_same_zone(zone_ptr, block_ptr, new_size);
+		printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
+		ret_val = do_realloc_in_same_zone(zone_ptr, block_ptr, new_size);
 	}
 	else {
 		ret_val = get_ptr(new_size);
@@ -93,7 +112,6 @@ void *realloc(void *ptr, size_t size)
 	if (validate_md(&zone_ptr, &block_ptr)) {
 		goto bad;
 	}
-
 //	printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
 	if (size < (size_t) (-sizeof(struct block_s))) {
 		ALIGN_META_INFO(size);
@@ -103,7 +121,9 @@ void *realloc(void *ptr, size_t size)
 
 	ret_val = do_realloc(zone_ptr, block_ptr, size);
 
-	ret_val = get_ptr(size);
+//	ret_val = get_ptr(size);
+	ret_val += ((size_t)&((struct block_s *)0)->data);
+
 bad:
     pthread_mutex_unlock(&mutex_malloc);
 end:

@@ -38,7 +38,7 @@ void show_alloc_zone(enum zone_type_e zone_type)
 	while (zone_ptr) {
 		printf("%s : %p\n", get_zone_type(zone_type), zone_ptr);
 
-		show_meta_block(zone_ptr->md_block_head);
+		show_meta_block(&zone_ptr->md_block_head);
 		zone_ptr = zone_ptr->next;
 	}
 }

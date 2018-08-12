@@ -38,8 +38,9 @@ enum insert_type_e {
 /* block struct */
 struct block_s {
 	size_t           alloc_size;           /* size + meta_info */
-	int              free     :1,
-	                 reserved :31;
+	int              free     ;
+//	int              free     :1,
+//	                 reserved :31;
 	struct block_s  *next;
 	struct block_s  *prev;
 
@@ -55,7 +56,7 @@ struct			zone_s
 	size_t				space_left;
 	struct zone_s		*next;
 	struct zone_s		*prev;
-	struct block_s		md_block_head[]; /* A pointer to the head blocks. Should be last */
+	struct block_s		md_block_head; /* A pointer to the head blocks. Should be last */
 };
 
 

@@ -35,7 +35,7 @@ void *get_ptr_to_md(void *ptr)
 
 int check_block_ptr(struct zone_s *zone_ptr, struct block_s *block_ptr)
 {
-    struct block_s *tmp_block_ptr = zone_ptr->md_block_head;
+    struct block_s *tmp_block_ptr = &zone_ptr->md_block_head;
     int ret_val = 1;
 
     while (tmp_block_ptr) {

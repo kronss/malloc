@@ -94,7 +94,7 @@ rew: clean.light all test
 
 test: all
 	$(CC) src/main.c -c -o .obj/main.o -I./include
-	$(CC) .obj/main.o $(SYMLINK) 
+	$(CC) .obj/main.o $(SYMLINK) -o a.out 
 
 
 #** rules * libft *************************************************************#
