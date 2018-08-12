@@ -44,51 +44,65 @@ void *create_new_block(struct zone_s *zone_ptr,
 
 static inline
 int check_curr_block(struct zone_s *zone_ptr,
-                     struct block_s *block_ptr, size_t size)
+                     struct block_s *block_ptr, size_t size_request)
 {
-    struct block_s *next;
-    unsigned long space_between = 0;
-    int retval = 0;
-//    printf("%s:%d: *** size  *****************************************\n");
+	int ret_val = 0;
 
-//    printf("%s:%d: free == %d\n", block_ptr->free - zone_ptr);
-    if (!block_ptr->free) {
-//        retval = false
-        goto end;
-    }
-    if (!block_ptr->next) {
-    	printf("---------------------1-----------------\n");
-        next = (uint8_t *)zone_ptr + zone_ptr->origin_size;// - sizeof(struct zone_s);
-        printf("%s:%d: *** zone_ptr              == %p\n",  __func__, __LINE__, zone_ptr);
-        printf("%s:%d: *** next                  == %p\n",  __func__, __LINE__, next);
-//        next = (uint8_t)&zone_ptr->md_block_head + (uint8_t)zone_ptr->origin_size;// - sizeof(struct zone_s);
-//    	next = &zone_ptr->md_block_head + zone_ptr->space_left;
-    } else {
-//    	printf("---------------------2-----------------\n");
-        next = block_ptr->next;
-    }
-    space_between = (unsigned long) ((uint8_t)next - (uint8_t)block_ptr);
-    if (size < space_between) {
-        retval = 1;
-    }
-	printf("---------------------noend-----------------\n");
-end:
-	printf("%s:%d: *** sizeof(zone_ptr)      == %zu\n",  __func__, __LINE__, sizeof(*zone_ptr));
-//	printf("%s:%d: *** zone_ptr              == %p\n",  __func__, __LINE__, zone_ptr);
-	printf("%s:%d: *** zone_ptr->origin_size == %zu\n",  __func__, __LINE__, zone_ptr->origin_size);
-	printf("%s:%d: *** zone_ptr->space_left  == %zu\n",  __func__, __LINE__, zone_ptr->space_left);
-//	printf("%s:%d: *** zone_ptr->next        == %p\n",  __func__, __LINE__, &zone_ptr->next);
-//	printf("%s:%d: *** zone_ptr->prev        == %p\n",  __func__, __LINE__, &zone_ptr->prev);
-//	printf("%s:%d: *** zone_ptr->md_block_he == %p\n",  __func__, __LINE__, &zone_ptr->md_block_head);
-//	printf("%s:%d: *** block_ptr->prev       == %p\n",  __func__, __LINE__, block_ptr->prev);
-//	printf("%s:%d: *** block_ptr->next       == %p\n",  __func__, __LINE__, block_ptr->next);
-	printf("%s:%d: *** block_ptr->free       == %d\n",  __func__, __LINE__, block_ptr->free);
-    printf("%s:%d: *** size                  == %zu\n", __func__, __LINE__, size);
-    printf("%s:%d: *** space_between         == %zu\n", __func__, __LINE__, (size_t)space_between);
-    printf("%s:%d: *** zone_ptr->origin_size == %zu\n", __func__, __LINE__, zone_ptr->origin_size);
-    printf("%s:%d: ***   retval              == %d\n" , __func__, __LINE__, retval);
-    return retval;
+	if (size_request < block_ptr->alloc_size) {
+		ret_val = 1;
+	}
+
+	return ret_val;
 }
+
+
+//static inline
+//int check_curr_block(struct zone_s *zone_ptr,
+//                     struct block_s *block_ptr, size_t size_request)
+//{
+//    struct block_s *next;
+//    unsigned long space_between = 0;
+//    int retval = 0;
+////    printf("%s:%d: *** size  *****************************************\n");
+//
+////    printf("%s:%d: free == %d\n", block_ptr->free - zone_ptr);
+//    if (!block_ptr->free) {
+////        retval = false
+//        goto end;
+//    }
+//    if (!block_ptr->next) {
+//    	printf("---------------------onedick-----------------\n");
+//        next = (uint8_t *)zone_ptr + zone_ptr->origin_size;// - sizeof(struct zone_s);
+////        printf("%s:%d: *** zone_ptr              == %p\n",  __func__, __LINE__, zone_ptr);
+////        printf("%s:%d: *** next                  == %p\n",  __func__, __LINE__, next);
+////        next = (uint8_t)&zone_ptr->md_block_head + (uint8_t)zone_ptr->origin_size;// - sizeof(struct zone_s);
+////    	next = &zone_ptr->md_block_head + zone_ptr->space_left;
+//    } else {
+//    	printf("---------------------twodick-----------------\n");
+//        next = block_ptr->next;
+//    }
+//    space_between = (unsigned long) ((uint8_t)next - (uint8_t)block_ptr);
+//    if (size_request < space_between) {
+//        retval = 1;
+//    }
+////	printf("---------------------noend-----------------\n");
+//end:
+//	printf("%s:%d: *** sizeof(zone_ptr)      == %zu\n",  __func__, __LINE__, sizeof(*zone_ptr));
+////	printf("%s:%d: *** zone_ptr              == %p\n",  __func__, __LINE__, zone_ptr);
+//	printf("%s:%d: *** zone_ptr->origin_size == %zu\n",  __func__, __LINE__, zone_ptr->origin_size);
+//	printf("%s:%d: *** zone_ptr->space_left  == %zu\n",  __func__, __LINE__, zone_ptr->space_left);
+////	printf("%s:%d: *** zone_ptr->next        == %p\n",  __func__, __LINE__, &zone_ptr->next);
+////	printf("%s:%d: *** zone_ptr->prev        == %p\n",  __func__, __LINE__, &zone_ptr->prev);
+////	printf("%s:%d: *** zone_ptr->md_block_he == %p\n",  __func__, __LINE__, &zone_ptr->md_block_head);
+////	printf("%s:%d: *** block_ptr->prev       == %p\n",  __func__, __LINE__, block_ptr->prev);
+////	printf("%s:%d: *** block_ptr->next       == %p\n",  __func__, __LINE__, block_ptr->next);
+//	printf("%s:%d: *** block_ptr->free       == %d\n",  __func__, __LINE__, block_ptr->free);
+//    printf("%s:%d: *** size                  == %zu\n", __func__, __LINE__, size_request);
+//    printf("%s:%d: *** space_between         == %zu\n", __func__, __LINE__, (size_t)space_between);
+//    printf("%s:%d: *** zone_ptr->origin_size == %zu\n", __func__, __LINE__, zone_ptr->origin_size);
+//    printf("%s:%d: ***   retval              == %d\n" , __func__, __LINE__, retval);
+//    return retval;
+//}
 
 void *find_available_block(struct zone_s *zone_ptr, size_t size)
 {
