@@ -6,7 +6,7 @@
 //static inline void *init_new_meta_block(struct zone_s *block_ptr, size_t size);
 void *find_available_block(struct zone_s *zone_ptr, size_t size);
 void *find_available_zone(size_t size_request, struct zone_s *zone_head, enum zone_type_e zone_type);
-void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone);
+void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone, size_t size_request);
 void *get_ptr_from_zone(size_t size, enum zone_type_e zone_type);
 void *get_ptr(size_t size);
 void *malloc(size_t size);
@@ -142,6 +142,8 @@ void *find_available_zone(size_t size_request, struct zone_s *zone_head, enum zo
 
 	zone_ptr = zone_head;
 	while (zone_ptr) {
+	    printf("%s:%d: size_request          %zu\n", __func__, __LINE__, size_request);
+	    printf("%s:%d: zone_ptr->space_left) %zu\n", __func__, __LINE__, zone_ptr->space_left);
 		if (size_request < zone_ptr->space_left) {
 //			retval = init_new_meta_block(zone_ptr, size_request);
 			retval = find_available_block(zone_ptr, size_request);
@@ -150,7 +152,7 @@ void *find_available_zone(size_t size_request, struct zone_s *zone_head, enum zo
 		if (zone_ptr->next) {
 			zone_ptr = zone_ptr->next;
 		} else {
-			zone_ptr->next = init_new_zone(zone_type, zone_ptr);
+			zone_ptr->next = init_new_zone(zone_type, zone_ptr, size_request);
 			if (!zone_ptr->next) {
 				retval = NULL;
 				break ;
@@ -163,22 +165,24 @@ void *find_available_zone(size_t size_request, struct zone_s *zone_head, enum zo
 
 
 
-void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone)
+void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone, size_t size_request)
 {
     void           *raw_ptr;
     struct zone_s  *zone_ptr;
     struct block_s *block_ptr;
     size_t          size_zone;
+    static int ii = 1;
+
 
     switch (zone_type) {
     case TINY:  size_zone = TINY_ZONE  ;    break;
     case SMALL: size_zone = SMALL_ZONE ;    break;
-    case LARGE: size_zone = LARGE_ZONE ;    break;
+    case LARGE: size_zone = ALIGN_PAGE_SIZE(size_request) ;    break;
 
     default:    raw_ptr = NULL    ;    goto end;
     }
     ALIGN_PAGE_SIZE(size_zone);
-//    printf("%s:%d: size_zone %zu\n", __func__, __LINE__, size_zone);
+    printf("%s:%d: size_zone %zu\n", __func__, __LINE__, size_zone);
 
     raw_ptr = mmap(NULL, size_zone, PROT_EXEC | PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 	if (raw_ptr == MAP_FAILED) {
@@ -192,16 +196,27 @@ void *init_new_zone(enum zone_type_e zone_type, struct zone_s *prev_zone)
 	zone_ptr->next = NULL;
 	zone_ptr->prev = prev_zone;
 	if (prev_zone) {
-		prev_zone->next = (struct zone_s *)raw_ptr;
+		prev_zone->next = zone_ptr;
 	}
 //	init_head_md();
-	block_ptr = &zone_ptr->md_block_head;
+	block_ptr = &(zone_ptr->md_block_head);
     block_ptr->next = NULL;
     block_ptr->prev = NULL;
     block_ptr->alloc_size = zone_ptr->space_left;
     block_ptr->free = 1;
-//    printf("%s:%d: ----- %llu\n", __func__, __LINE__, raw_ptr);
 end:
+	if (ii) {
+    printf("%s:%d: ****************************\n", __func__, __LINE__);
+    printf("%s:%d: ----- %p\n", __func__, __LINE__, zone_ptr);
+	printf("%s:%d: ----- %zu\n", __func__, __LINE__, zone_ptr->origin_size);
+	printf("%s:%d: ----- %zu\n", __func__, __LINE__, zone_ptr->space_left);
+	printf("%s:%d: ----- %p\n", __func__, __LINE__, zone_ptr->next);
+	printf("%s:%d: ----- %p\n", __func__, __LINE__, zone_ptr->prev);
+	printf("%s:%d: ----- %p\n", __func__, __LINE__, zone_ptr->md_block_head);
+	printf("%s:%d: ----- %p\n", __func__, __LINE__, &(zone_ptr->md_block_head));
+
+	ii--;
+	}
     return raw_ptr ;
 }
 
@@ -209,16 +224,21 @@ void *get_ptr_from_zone(size_t size, enum zone_type_e zone_type)
 {
     void *retval;
 
+    printf("%s:%d\n", __func__, __LINE__); //debug
     if (!malloc_meneger_g.zone_heads[zone_type]) {
-        malloc_meneger_g.zone_heads[zone_type] = init_new_zone(zone_type, NULL);
+    	printf("%s:%d\n", __func__, __LINE__); //debug
+        malloc_meneger_g.zone_heads[zone_type] = init_new_zone(zone_type, NULL, size);
+    	printf("%s:%d\n", __func__, __LINE__); //debug
         if (!malloc_meneger_g.zone_heads[zone_type]) {
-            return NULL;
+        	retval = NULL;
+        	goto end;
         }
     }
-//	printf("%s:%d\n", __func__, __LINE__); //debug
+	printf("%s:%d\n", __func__, __LINE__); //debug
 
     retval = find_available_zone(size, malloc_meneger_g.zone_heads[zone_type], zone_type);
 
+end:
     return retval;
 }
 

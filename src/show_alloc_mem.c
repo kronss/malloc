@@ -28,7 +28,7 @@ void show_meta_block(struct block_s * block_ptr)
 			printf("\t %p - %11p : diff %10ld : %zu bytes are freed\n", block_ptr, block_ptr->next, diff, block_ptr->alloc_size);
 		}
 		block_ptr = block_ptr->next;
-		sleep(1);
+//		sleep(1);
 	}
 }
 

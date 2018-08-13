@@ -83,7 +83,7 @@ struct malloc_meneger_s {
 enum zone_size_e {
 	TINY_ZONE  = PAGE_SIZE * 5  ,
 	SMALL_ZONE = PAGE_SIZE * 1500,
-	LARGE_ZONE = PAGE_SIZE * 30,
+//	LARGE_ZONE = PAGE_SIZE * 5000,
 };
 
 //enum zone_size_e {
@@ -95,7 +95,7 @@ enum zone_size_e {
 enum zone_treshold_e{
     TINY_TRESHHOLD = TINY_ZONE / 100,
     SMALL_TRESHHOLD = SMALL_ZONE / 100,
-    LARGE_TRESHHOLD = LARGE_ZONE / 100,
+//    LARGE_TRESHHOLD = LARGE_ZONE / 100,
 
 };
 
@@ -106,8 +106,8 @@ int check_block_ptr(struct zone_s *zone_ptr, struct block_s *block_ptr);
 int validate_md(struct zone_s **zone_ptr, struct block_s **block_ptr);
 void *get_zone_head(size_t size);
 void *get_ptr(size_t size);
-void remove_cur_zone_to_pull(struct zone_s *zone_ptr);
-int is_all_blocks_free(struct zone_s *zone_ptr);
+//void remove_cur_zone_to_pull(struct zone_s *zone_ptr);
+//int is_all_blocks_free(struct zone_s *zone_ptr);
 void free_defragment_unmap(struct zone_s *zone_ptr, struct block_s *block_ptr);
 void *create_new_block(struct zone_s *zone_ptr, struct block_s *block_ptr, size_t size);
 
