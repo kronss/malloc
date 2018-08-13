@@ -61,7 +61,7 @@ int main(int ac, char **av)
 printf("---------------------------------------------------------\n");
 //    	ptr0 = malloc(1);
 //
-	ptr1 = realloc(ptr0, 150);
+	ptr1 = realloc(ptr2, 150);
 //    show_alloc_mem();
 
 //    free(NULL + 0x1);
