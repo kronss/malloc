@@ -21,8 +21,8 @@ void *create_new_block(struct zone_s *zone_ptr,
     struct block_s *next_block_ptr;
 
     next_block_ptr = (struct block_s *)((uint8_t *)block_ptr + size);
-    printf("%s:%d:%p\n", __func__, __LINE__, block_ptr);
-    printf("%s:%d:%p\n", __func__, __LINE__, next_block_ptr);
+//    printf("%s:%d:%p\n", __func__, __LINE__, block_ptr);
+//    printf("%s:%d:%p\n", __func__, __LINE__, next_block_ptr);
 //    printf("%s:%d:%zu\n", __func__, __LINE__, new_block_ptr->alloc_size);
     next_block_ptr->alloc_size = block_ptr->alloc_size - size;
 //    printf("%s:%d:%zu\n", __func__, __LINE__, new_block_ptr->alloc_size);
@@ -33,13 +33,13 @@ void *create_new_block(struct zone_s *zone_ptr,
     block_ptr->alloc_size = size;
     block_ptr->free = 0;
     block_ptr->next = next_block_ptr;
-    printf("%s:%d:%p\n", __func__, __LINE__, block_ptr->next);
-    printf("%s:%d:%p\n", __func__, __LINE__, next_block_ptr);
+//    printf("%s:%d:%p\n", __func__, __LINE__, block_ptr->next);
+//    printf("%s:%d:%p\n", __func__, __LINE__, next_block_ptr);
 //    block_ptr->prev =
 
     zone_ptr->space_left -= size;
 
-    printf("%s:%d:%p\n", __func__, __LINE__, block_ptr);
+//    printf("%s:%d:%p\n", __func__, __LINE__, block_ptr);
     return block_ptr;
 }
 

@@ -36,14 +36,18 @@ void *get_ptr_to_md(void *ptr)
 int check_block_ptr(struct zone_s *zone_ptr, struct block_s *block_ptr)
 {
     struct block_s *tmp_block_ptr = &zone_ptr->md_block_head;
-    int ret_val = 1;
+    int ret_val = 0;
 
     while (tmp_block_ptr) {
-        if (block_ptr == tmp_block_ptr)
-            goto end;
+        if (block_ptr == tmp_block_ptr) {
+            if (!block_ptr->free) {
+            	ret_val = 1;
+            }
+            	goto end;
+        }
         tmp_block_ptr = tmp_block_ptr->next;
     }
-    ret_val = 0;
+
 end:
     return ret_val;
 }

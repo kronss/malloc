@@ -107,7 +107,8 @@ void *do_realloc_in_same_zone(struct zone_s *zone_ptr, struct block_s *old_block
 
 		new_block_ptr = get_ptr(new_size);
 		printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
-		ft_memmove(new_block_ptr, old_block_ptr, old_block_ptr->alloc_size);
+//		ft_memmove(new_block_ptr, old_block_ptr, old_block_ptr->alloc_size);
+//		((struct block_s *)new_block_ptr)->next = old_block_ptr->next;
 		printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
 		free_defragment_unmap(zone_ptr, old_block_ptr);
 		printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
@@ -135,6 +136,7 @@ static void *do_realloc(struct zone_s *zone_ptr, struct block_s *block_ptr, size
 		printf("%s:%d:new_size == %zu\n", __func__, __LINE__, new_size); //debug
 		ret_val = get_ptr(new_size);
 		ft_memmove(ret_val, block_ptr, block_ptr->alloc_size);
+
 		free_defragment_unmap(zone_ptr, block_ptr);
 	}
 

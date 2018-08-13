@@ -43,25 +43,25 @@ int main(int ac, char **av)
     printf("---------------------------------------------------------\n");
 
     	ptr0 = malloc(3);
-//		ptr1 = malloc(3);
-//		ptr2 = malloc(3);
-//		ptr3 = malloc(3);
+		ptr1 = malloc(3);
+		ptr2 = malloc(3);
+		ptr3 = malloc(3);
 
     show_alloc_mem();
 
     printf("---------------------------------------------------------\n");
-	ptr1 = realloc(ptr0, 2224);
 ////
 ////	  printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr0);
 ////	  printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr1);
-//    	free(ptr0);
-//    	free(ptr1);
+    	free(ptr0);
+    	free(ptr1);
 ////    	free(ptr2);
-//        show_alloc_mem();
+        show_alloc_mem();
 //
-//printf("---------------------------------------------------------\n");
+printf("---------------------------------------------------------\n");
 //    	ptr0 = malloc(1);
 //
+	ptr1 = realloc(ptr0, 150);
 //    show_alloc_mem();
 
 //    free(NULL + 0x1);

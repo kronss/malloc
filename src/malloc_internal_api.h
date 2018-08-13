@@ -81,7 +81,7 @@ struct malloc_meneger_s {
 
 
 enum zone_size_e {
-	TINY_ZONE  = PAGE_SIZE * 1  ,
+	TINY_ZONE  = PAGE_SIZE * 5  ,
 	SMALL_ZONE = PAGE_SIZE * 1500,
 	LARGE_ZONE = PAGE_SIZE * 30,
 };
