@@ -28,72 +28,75 @@ calloc
 
 
 //
-int main(int ac, char **av)
-{
-    char *ptr0 = NULL;
-    char *ptr1 = NULL;
-    char *ptr2 = NULL;
-    char *ptr3 = NULL;
-//    char *ptr4 = NULL;
-
-
-//    printf("sizeof struct block_s == %zu\n", sizeof(struct block_s));
-//    printf("sizeof struct zone_s == %zu\n", sizeof(struct zone_s));
-
-//    for (int i = 0; i < 1000000; ++i) {
-//    show_alloc_mem();
-    printf("---------------------------------------------------------\n");
-
-    	ptr0 = malloc(M);
-		ptr1 = malloc(2*M);
-		ptr2 = malloc(3*M);
-		ptr3 = malloc(4*M);
-
-    show_alloc_mem();
-
-    printf("---------------------------------------------------------\n");
-////
-////	  printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr0);
-////	  printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr1);
-    	free(ptr0);
-//    	free(ptr3);
-////    	free(ptr2);
-        show_alloc_mem();
-////
-//printf("---------------------------------------------------------\n");
-//    	ptr0 = malloc(1);
-//
-//	ptr1 = realloc(ptr2, 15000);
-//    show_alloc_mem();
-
-//    free(NULL + 0x1);
-//    ptr = malloc(3111);
-//
-//    show_alloc_mem();
-
-//    printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr);
-//    ptr = malloc(4);
-//    printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr);
-
-
-
-    return (0);
-}
-//
-//
-//int main()
+//int main(int ac, char **av)
 //{
-//char *addr1;
-//char *addr2;
-//char *addr3;
+//    char *ptr0 = NULL;
+//    char *ptr1 = NULL;
+//    char *ptr2 = NULL;
+//    char *ptr3 = NULL;
+//    char *ptr4 = NULL;
+//    char *ptr5 = NULL;
+//    char *ptr6 = NULL;
 //
-//addr1 = (char*)malloc(16*M);
-//strcpy(addr1, "Bonjour\n");
-//printf("%s\n", addr1);
-//addr2 = (char*)malloc(16*M);
-//addr3 = (char*)realloc(addr1, 128*M);
-//addr3[127*M] = 42;
-//printf("%s\n", addr1);
-//return (0);
+//
+////    printf("sizeof struct block_s == %zu\n", sizeof(struct block_s));
+////    printf("sizeof struct zone_s == %zu\n", sizeof(struct zone_s));
+//
+////    for (int i = 0; i < 1000000; ++i) {
+////    show_alloc_mem();
+//    printf("---------------------------------------------------------\n");
+//
+//    	ptr0 = malloc(1*M);
+//		ptr1 = malloc(2*M);
+//		ptr2 = malloc(3*M);
+//		ptr3 = malloc(4*M);
+//        ptr4 = malloc(5*M);
+//        ptr5 = malloc(6*M);
+//        ptr6 = malloc(7*M);
+//
+//
+//        show_alloc_mem();
+//
+//    printf("---------------------------------------------------------\n");
+//////
+//////	  printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr0);
+//////	  printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr1);
+//    	free(ptr3);
+////    	free(ptr3);
+//////    	free(ptr2);
+//        show_alloc_mem();
+//
+//        ptr3 = malloc(4*M);
+//        show_alloc_mem();
+//
+//////
+////printf("---------------------------------------------------------\n");
+////    	ptr0 = malloc(1);
+////
+////	ptr1 = realloc(ptr2, 15000);
+////    show_alloc_mem();
+//
+////    free(NULL + 0x1);
+////    ptr = malloc(3111);
+////
+////    show_alloc_mem();
+//
+////    printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr);
+////    ptr = malloc(4);
+////    printf("%s:%d: ----- %llu\n", __func__, __LINE__, ptr);
+//
+//
+//
+//    return (0);
 //}
-
+//
+int main ()
+{
+malloc (1024);
+malloc (1024 * 32);
+malloc (1024 * 1024);
+malloc (1024 * 1024 * 16);
+malloc (1024 * 1024 * 128);
+show_alloc_mem ();
+return (0);
+}

@@ -175,6 +175,7 @@ void *realloc(void *ptr, size_t size)
 	printf("%s:%d:size == %zu\n", __func__, __LINE__, size); //debug
 
 	ret_val = do_realloc(zone_ptr, block_ptr, size);
+    printf("%s:%d:ptr == %p\n", __func__, __LINE__, ret_val); //debug
 
 //	ret_val = get_ptr(size);
 	ret_val += ((size_t)&((struct block_s *)0)->data);

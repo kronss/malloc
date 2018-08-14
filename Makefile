@@ -67,7 +67,7 @@ $(OBJ_DIR):
 all: $(NAME) $(SYMLINK)
 
 #$(NAME): $(LIB) $(PF) $(OBJ) $(INC)
-$(NAME): $(LIB)  $(OBJ) $(INC) src/malloc_internal_api.h
+$(NAME): $(LIB) $(OBJ) $(INC) src/malloc_internal_api.h
 		$(CC) $(F) $(FSHARED) $(OBJ) $(LIB) -o $(NAME) 
 
 $(SYMLINK):
@@ -89,12 +89,14 @@ clean.light:
 	rm -rf $(OBJ) .obj/main.o
 
 rew: clean.light all test
-	/usr/bin/time ./a.out
+#	/usr/bin/time ./a.out
 #	/usr/bin/time -l ./a.out
+	/usr/bin/time --verbose ./a.out
 
 test: all
 	$(CC) src/main.c -c -o .obj/main.o -I./include
-	$(CC) .obj/main.o $(SYMLINK) -o a.out 
+	$(CC) .obj/main.o libft_malloc.so -Wl,-rpath=. -I./include
+#	$(CC) .obj/main.o $(NAME) -o a.out 
 
 
 #** rules * libft *************************************************************#

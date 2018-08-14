@@ -1,7 +1,4 @@
-//#include <unistd.h>
 #include "malloc_internal_api.h"
-
-
 
 //static inline void *init_new_meta_block(struct zone_s *block_ptr, size_t size);
 void *find_available_block(struct zone_s *zone_ptr, size_t size);

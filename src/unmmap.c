@@ -64,7 +64,7 @@ static void remove_cur_zone_to_pull(struct zone_s *zone_ptr)
 	if (zone_prev) /* main fix probably there TODO: check*/
 		zone_prev->prev = zone_prev;
     printf("%s:%d: ----- %zu\n", __func__, __LINE__, zone_ptr->origin_size);
-    sleep(1);
+//    sleep(1);
 	munmap(zone_ptr, zone_ptr->origin_size);
 }
 
@@ -72,6 +72,7 @@ void free_defragment_unmap(struct zone_s *zone_ptr, struct block_s *block_ptr)
 {
 	free_and_return_block_to_pull(zone_ptr, block_ptr);
 	if (is_all_blocks_free(zone_ptr)) {
+	    //TODO:: if last zone Do not unmmap it. It cause context switches, cause for  increasing latency
 		remove_cur_zone_to_pull(zone_ptr);
 	}
 }
