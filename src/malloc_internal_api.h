@@ -8,20 +8,30 @@
 # include <sys/mman.h>
 # include <pthread.h>
 # include <stdint.h> /*uint8_t*/
-//#include <unistd.h> /*getpagesize*/
+#include <unistd.h> /*getpagesize*/
 //#include <stddef.h> /*offsetof*/
 #include <unistd.h>
 
 
-//#define ALIGN_PAGE_SIZE(len_) (len_) = ((PAGE_SIZE - 1) & (len_)) ? (((len_) + PAGE_SIZE) & ~(PAGE_SIZE - 1)) : (len_)
-//
-//#define METABLOCK_SIZE sizeof(struct s_block)
-//
-//#define ALIGN_WORD(x) (((((x) - 1) >> 2) << 2) + 4)  //TODO: re work
-//#define ALIGN_META_INFO(x) (x) = ALIGN_WORD((x) + sizeof(struct block_s))  //TODO: re work
+#define TINY_ZONE  (8LU * getpagesize())
+#define	SMALL_ZONE (1500LU * getpagesize())
+
+#define TINY_TRESHHOLD ((TINY_ZONE) / 100)
+#define SMALL_TRESHHOLD ((SMALL_ZONE) / 100)
 
 
-enum e_zone_type {
+# define PROT_FLAGS	(PROT_EXEC | PROT_READ | PROT_WRITE)
+# define MAP_FLAGS	(MAP_ANONYMOUS | MAP_PRIVATE)
+
+#define ALIGN_PAGE_SIZE(len_) (len_) = ((PAGE_SIZE - 1) & (len_)) ? (((len_) + PAGE_SIZE) & ~(PAGE_SIZE - 1)) : (len_)
+#define METABLOCK_SIZE sizeof(struct s_block)
+#define ALIGN_WORD(x) (((((x) - 1) >> 2) << 2) + 4)  //TODO: re work
+#define ALIGN_META_INFO(x) (x) = ALIGN_WORD((x) + sizeof(struct s_block))  //TODO: re work
+
+#define OFFSETOF(st, m) ((size_t)&(((st *)0)->m))
+
+enum e_zone_type
+{
 	MIN_ZONE_TYPE,
 	TINY = MIN_ZONE_TYPE,
 	SMALL,
@@ -62,35 +72,13 @@ struct malloc_meneger_s {
 
 
 
-#define ALIGN_PAGE_SIZE(len_) (len_) = ((PAGE_SIZE - 1) & (len_)) ? (((len_) + PAGE_SIZE) & ~(PAGE_SIZE - 1)) : (len_)
-#define METABLOCK_SIZE sizeof(struct s_block)
-#define ALIGN_WORD(x) (((((x) - 1) >> 2) << 2) + 4)  //TODO: re work
-#define ALIGN_META_INFO(x) (x) = ALIGN_WORD((x) + sizeof(struct s_block))  //TODO: re work
-
 
 
 // silversearcher-ag
 // ag
 
 
-enum zone_size_e {
-	TINY_ZONE  = PAGE_SIZE * 5  ,
-	SMALL_ZONE = PAGE_SIZE * 1500,
-//	LARGE_ZONE = PAGE_SIZE * 5000,
-};
 
-//enum zone_size_e {
-//	TINY_ZONE  = 4096 * 1,
-//	SMALL_ZONE = 4096 * 160,
-//	LARGE_ZONE = 4096 * 1000,
-//};
-
-enum zone_treshold_e{
-    TINY_TRESHHOLD = TINY_ZONE / 100,
-    SMALL_TRESHHOLD = SMALL_ZONE / 100,
-//    LARGE_TRESHHOLD = LARGE_ZONE / 100,
-
-};
 
 /**********************************/
 void free_and_return_block_to_pull(struct s_zone *zone_ptr, struct s_block *block_ptr);
