@@ -49,7 +49,7 @@ void show_alloc_mem()
 {
 	enum e_zone_type zone_type;
 
-	pthread_mutex_lock(&mutex_malloc);
+	pthread_mutex_lock(&g_mutex_malloc);
 	g_alloc_mnr.print_total_alloc = 0;
 	zone_type = MIN_ZONE_TYPE;
 	while (zone_type < MAX_ZONE_TYPE) {
@@ -58,5 +58,5 @@ void show_alloc_mem()
 	}
 	printf("Total : %zu bytes\n", g_alloc_mnr.print_total_alloc);
 
-	pthread_mutex_unlock(&mutex_malloc);
+	pthread_mutex_unlock(&g_mutex_malloc);
 }

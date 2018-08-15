@@ -45,6 +45,8 @@ SRC_FILE_NAME =		malloc.c               \
 					realloc.c              \
 					unmmap.c               \
 					mmap.c                 \
+					meta_block.c           \
+
 #add .c file -->
 
 SRC_DIR = src

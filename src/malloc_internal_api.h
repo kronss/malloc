@@ -1,13 +1,13 @@
 #ifndef MALLOC_INTERNAL_API_H
 # define MALLOC_INTERNAL_API_H
 
-#include "malloc.h"
-#include "libft.h"
+# include "malloc.h"
+# include "libft.h"
 
-#include <sys/user.h> /* PAGE_SIZE */
-#include <sys/mman.h>
-#include <pthread.h>
-#include <stdint.h> /*uint8_t*/
+# include <sys/user.h> /* PAGE_SIZE */
+# include <sys/mman.h>
+# include <pthread.h>
+# include <stdint.h> /*uint8_t*/
 //#include <unistd.h> /*getpagesize*/
 //#include <stddef.h> /*offsetof*/
 #include <unistd.h>
@@ -103,6 +103,7 @@ void *get_ptr(size_t size);
 //int is_all_blocks_free(struct zone_s *zone_ptr);
 void free_defragment_unmap(struct s_zone *zone_ptr, struct s_block *block_ptr);
 //void *create_new_block(struct zone_s *zone_ptr, struct block_s *block_ptr, size_t size);
+void	*find_zone(size_t size_request, struct s_zone *zone_head, enum e_zone_type zone_type);
 void	*new_zone(enum e_zone_type zone_type, struct s_zone *prev_zone, size_t size_request);
 void	*find_available_block(struct s_zone *zone_ptr, size_t size);
 
@@ -112,6 +113,6 @@ void	*find_available_block(struct s_zone *zone_ptr, size_t size);
 
 
 extern struct malloc_meneger_s g_alloc_mnr;
-extern pthread_mutex_t mutex_malloc;
+extern pthread_mutex_t g_mutex_malloc;
 
 #endif /*MALLOC_INTERNAL_API_H*/

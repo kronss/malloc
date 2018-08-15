@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   meta_block.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ochayche <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/08/15 20:05:54 by ochayche          #+#    #+#             */
+/*   Updated: 2018/08/15 20:06:03 by ochayche         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "malloc_internal_api.h"
 
@@ -35,7 +45,7 @@ static int	check_curr_block(struct s_block *block_ptr, size_t size_request)
 	return (ret_val);
 }
 
-void	*find_available_block(struct s_zone *zone_ptr, size_t size)
+void		*find_available_block(struct s_zone *zone_ptr, size_t size)
 {
 	void			*ret_val;
 	struct s_block	*block_ptr;

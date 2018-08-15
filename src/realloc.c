@@ -158,7 +158,7 @@ void *realloc(void *ptr, size_t size)
 		ret_val = (malloc(size));
 		goto end;
 	}
-	pthread_mutex_lock(&mutex_malloc);
+	pthread_mutex_lock(&g_mutex_malloc);
 	if (size <= 0) {
 	    goto bad;
 	}
@@ -181,7 +181,7 @@ void *realloc(void *ptr, size_t size)
 	ret_val += ((size_t)&((struct s_block *)0)->data);
 
 bad:
-    pthread_mutex_unlock(&mutex_malloc);
+    pthread_mutex_unlock(&g_mutex_malloc);
 end:
     return ret_val;
 }

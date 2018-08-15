@@ -103,6 +103,7 @@ OBJ_NAME = ft_memset.o \
 	ft_atoi_ptv.o \
 	ft_abs.o \
 	ft_delnode.o
+
 OBJ_DIR = .obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(OBJ_NAME))
 

@@ -53,16 +53,19 @@ void		*malloc(size_t size)
 {
 	void	*ret_val;
 
-	pthread_mutex_lock(&mutex_malloc);
+	pthread_mutex_lock(&g_mutex_malloc);
 	ret_val = NULL;
 	if (size <= 0)
+	{
+		pthread_mutex_unlock(&g_mutex_malloc);
 		return (ret_val);
+	}
 	if (size < (size_t)(-sizeof(struct s_block)))
 	{
 		ALIGN_META_INFO(size);
 	}
 	ret_val = get_ptr(size);
 	ret_val += ((size_t)&((struct s_block *)0)->data);
-	pthread_mutex_unlock(&mutex_malloc);
+	pthread_mutex_unlock(&g_mutex_malloc);
 	return (ret_val);
 }

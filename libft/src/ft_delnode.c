@@ -39,6 +39,3 @@ void			ft_delnode(t_lst **head, t_lst *lst)
 	ft_strdel(&tmp->cut);
 	ft_memdel((void **)tmp);
 }
-
-
-
