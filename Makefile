@@ -44,6 +44,7 @@ SRC_FILE_NAME =		malloc.c               \
 					defragmentation.c      \
 					realloc.c              \
 					unmmap.c               \
+					mmap.c                 \
 #add .c file -->
 
 SRC_DIR = src
@@ -90,13 +91,13 @@ clean.light:
 
 rew: clean.light all test
 #	/usr/bin/time ./a.out
-#	/usr/bin/time -l ./a.out
-	/usr/bin/time --verbose ./a.out
+	/usr/bin/time -l ./a.out
+#	/usr/bin/time --verbose ./a.out
 
 test: all
 	$(CC) src/main.c -c -o .obj/main.o -I./include
-	$(CC) .obj/main.o libft_malloc.so -Wl,-rpath=. -I./include
-#	$(CC) .obj/main.o $(NAME) -o a.out 
+#	$(CC) .obj/main.o libft_malloc.so -Wl,-rpath=. -I./include
+	$(CC) .obj/main.o $(NAME) -o a.out 
 
 
 #** rules * libft *************************************************************#

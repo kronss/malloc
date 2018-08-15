@@ -2,8 +2,8 @@
 
 void free(void *ptr)
 {
-	struct zone_s *zone_ptr = NULL;
-	struct block_s *block_ptr = NULL;
+	struct s_zone *zone_ptr = NULL;
+	struct s_block *block_ptr = NULL;
 
 	pthread_mutex_lock(&mutex_malloc);
 	if (ptr == NULL) {

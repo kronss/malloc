@@ -1,6 +1,6 @@
 #include "malloc_internal_api.h"
 
-static inline int is_prev_free(struct block_s *block_ptr)
+static inline int is_prev_free(struct s_block *block_ptr)
 {
     int ret_val = 0;
 
@@ -13,7 +13,7 @@ static inline int is_prev_free(struct block_s *block_ptr)
     return ret_val;
 }
 
-static inline int is_next_free(struct block_s *block_ptr)
+static inline int is_next_free(struct s_block *block_ptr)
 {
     int ret_val = 0;
 
@@ -26,7 +26,7 @@ static inline int is_next_free(struct block_s *block_ptr)
     return ret_val;
 }
 
-static inline void merge_two_free_blocks(struct block_s *a, struct block_s *b)
+static inline void merge_two_free_blocks(struct s_block *a, struct s_block *b)
 {
     if (a && b) {
 
@@ -42,7 +42,7 @@ static inline void merge_two_free_blocks(struct block_s *a, struct block_s *b)
 }
 
 //static void try_defragment(struct zone_s *zone_ptr, struct block_s *block_ptr)
-static void try_defragment(struct block_s *block_ptr)
+static void try_defragment(struct s_block *block_ptr)
 {
     if (is_next_free(block_ptr)) {
         merge_two_free_blocks(block_ptr, block_ptr->next);
@@ -52,7 +52,7 @@ static void try_defragment(struct block_s *block_ptr)
     }
 }
 
-void free_and_return_block_to_pull(struct zone_s *zone_ptr, struct block_s *block_ptr)
+void free_and_return_block_to_pull(struct s_zone *zone_ptr, struct s_block *block_ptr)
 {
     block_ptr->free = 1;
     zone_ptr->space_left += block_ptr->alloc_size;

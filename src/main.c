@@ -90,13 +90,33 @@ calloc
 //    return (0);
 //}
 //
-int main ()
+//int main ()
+//{
+//malloc (1024);
+//malloc (1024 * 32);
+//malloc (1024 * 1024);
+//malloc (1024 * 1024 * 16);
+//malloc (1024 * 1024 * 128);
+//show_alloc_mem ();
+//return (0);
+//}
+
+int main()
 {
-malloc (1024);
-malloc (1024 * 32);
-malloc (1024 * 1024);
-malloc (1024 * 1024 * 16);
-malloc (1024 * 1024 * 128);
-show_alloc_mem ();
+int i;
+char *addr;
+
+i = 0;
+addr = (char*)malloc(1024);
+while (i < 1024)
+{
+addr = (char*)malloc(1024);
+addr[0] = 42;
+free(addr);
+i++;
+}
 return (0);
 }
+
+
+

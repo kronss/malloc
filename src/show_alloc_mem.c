@@ -13,7 +13,7 @@ static inline const char *get_zone_type(zone_type)
 	return retval;
 }
 
-void show_meta_block(struct block_s * block_ptr)
+void show_meta_block(struct s_block * block_ptr)
 {
 	long diff;
 	while(block_ptr)
@@ -22,7 +22,7 @@ void show_meta_block(struct block_s * block_ptr)
 		if (!block_ptr->free) {
 //			diff = (int8_t *)block_ptr->next - (int8_t *)block_ptr;
 			printf("\t %p - %11p : diff %10ld : %zu bytes\n", block_ptr, block_ptr->next, diff, block_ptr->alloc_size);
-			malloc_meneger_g.print_total_alloc += diff;
+			g_alloc_mnr.print_total_alloc += diff;
 		}
 		else {
 			printf("\t %p - %11p : diff %10ld : %zu bytes are freed\n", block_ptr, block_ptr->next, diff, block_ptr->alloc_size);
@@ -32,11 +32,11 @@ void show_meta_block(struct block_s * block_ptr)
 	}
 }
 
-void show_alloc_zone(enum zone_type_e zone_type)
+void show_alloc_zone(enum e_zone_type zone_type)
 {
-	struct zone_s *zone_ptr;
+	struct s_zone *zone_ptr;
 
-	zone_ptr = malloc_meneger_g.zone_heads[zone_type];
+	zone_ptr = g_alloc_mnr.zone_heads[zone_type];
 	while (zone_ptr) {
 		printf("%s : %p\n", get_zone_type(zone_type), zone_ptr);
 
@@ -47,16 +47,16 @@ void show_alloc_zone(enum zone_type_e zone_type)
 
 void show_alloc_mem()
 {
-	enum zone_type_e zone_type;
+	enum e_zone_type zone_type;
 
 	pthread_mutex_lock(&mutex_malloc);
-	malloc_meneger_g.print_total_alloc = 0;
+	g_alloc_mnr.print_total_alloc = 0;
 	zone_type = MIN_ZONE_TYPE;
 	while (zone_type < MAX_ZONE_TYPE) {
 		show_alloc_zone(zone_type);
 		++zone_type;
 	}
-	printf("Total : %zu bytes\n", malloc_meneger_g.print_total_alloc);
+	printf("Total : %zu bytes\n", g_alloc_mnr.print_total_alloc);
 
 	pthread_mutex_unlock(&mutex_malloc);
 }
