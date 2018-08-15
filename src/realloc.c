@@ -36,7 +36,7 @@ void	*realloc(void *ptr, size_t size)
 		ALIGN_META_INFO(size);
 	}
 	ret_val = do_realloc(zone_ptr, block_ptr, size);
-	ret_val += ((size_t)&((struct s_block *)0)->data);
+	ret_val += OFFSETOF(struct s_block, data);
 	pthread_mutex_unlock(&g_mutex_malloc);
 	return (ret_val);
 }

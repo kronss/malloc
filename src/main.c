@@ -100,7 +100,7 @@ calloc
 //show_alloc_mem ();
 //return (0);
 //}
-
+//
 int main()
 {
 int i;
@@ -119,4 +119,15 @@ return (0);
 }
 
 
+//
+//int main()
+//{
+//char *addr;
+//
+//addr = malloc(16);
+//free(NULL);
+//free((void *)addr + 5);
+//if (realloc((void *)addr + 5, 10) == NULL)
+//printf("Bonjour\n");
+//}
 

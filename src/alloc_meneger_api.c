@@ -14,32 +14,32 @@
 
 pthread_mutex_t g_mutex_malloc = PTHREAD_MUTEX_INITIALIZER;
 
-struct malloc_meneger_s g_alloc_mnr =
+struct s_malloc_meneger g_alloc_mnr =
 {
 	.zone_heads = {NULL, NULL, NULL},
 	.print_total_alloc = 0,
 };
 
-void	*get_zone_head(size_t size)
+struct s_zone	*get_zone_head(size_t size)
 {
-	void	*ret_val;
+	struct s_zone	*zone_head;
 
 	if (size <= TINY_TRESHHOLD)
 	{
-		ret_val = g_alloc_mnr.zone_heads[TINY];
+		zone_head = g_alloc_mnr.zone_heads[TINY];
 	}
 	else if (size <= SMALL_TRESHHOLD)
 	{
-		ret_val = g_alloc_mnr.zone_heads[SMALL];
+		zone_head = g_alloc_mnr.zone_heads[SMALL];
 	}
 	else
 	{
-		ret_val = g_alloc_mnr.zone_heads[LARGE];
+		zone_head = g_alloc_mnr.zone_heads[LARGE];
 	}
-	return (ret_val);
+	return (zone_head);
 }
 
-void	*get_ptr_to_md(void *ptr)
+void			*get_ptr_to_md(void *ptr)
 {
 	void	*ret_val;
 
@@ -47,7 +47,8 @@ void	*get_ptr_to_md(void *ptr)
 	return (ret_val);
 }
 
-int		check_block_ptr(struct s_zone *zone_ptr, struct s_block *block_ptr)
+int				check_block_ptr(struct s_zone *zone_ptr,
+										struct s_block *block_ptr)
 {
 	struct s_block	*tmp_block_ptr;
 	int				ret_val;
@@ -69,7 +70,8 @@ int		check_block_ptr(struct s_zone *zone_ptr, struct s_block *block_ptr)
 	return (ret_val);
 }
 
-int		validate_md(struct s_zone **zone_ptr, struct s_block **block_ptr)
+int				validate_md(struct s_zone **zone_ptr,
+							struct s_block **block_ptr)
 {
 	int					ret_val;
 	enum e_zone_type	zone_type;

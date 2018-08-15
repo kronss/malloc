@@ -34,7 +34,6 @@ void		*new_zone(enum e_zone_type zone_type, struct s_zone *prev_zone,
 					size_t size_request)
 {
 	void			*raw_ptr;
-	struct s_zone	*zone_ptr;
 	size_t			size_zone;
 
 	if (zone_type == TINY)
