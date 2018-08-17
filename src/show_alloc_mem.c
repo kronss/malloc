@@ -37,13 +37,13 @@ void				show_meta_block(struct s_block *block_ptr, int verbose)
 		diff = (int8_t *)block_ptr->next - (int8_t *)block_ptr;
 		if (!block_ptr->free)
 		{
-			printf("\t %p - %11p : diff %10ld : %zu bytes\n",
+			ft_printf("\t %p - %11p : diff %10ld : %zu bytes\n",
 					block_ptr, block_ptr->next, diff, block_ptr->alloc_size);
 			g_alloc_mnr.print_total_alloc += diff;
 		}
 		else if (verbose && block_ptr->free)
 		{
-			printf("\t %p - %11p : diff %10ld : %zu bytes are freed\n",
+			ft_printf("\t %p - %11p : diff %10ld : %zu bytes are freed\n",
 					block_ptr, block_ptr->next, diff, block_ptr->alloc_size);
 		}
 		block_ptr = block_ptr->next;
@@ -57,7 +57,7 @@ void				show_alloc_zone(enum e_zone_type zone_type, int verbose)
 	zone_ptr = g_alloc_mnr.zone_heads[zone_type];
 	while (zone_ptr)
 	{
-		printf("%s : %p\n", get_zone_type(zone_type), zone_ptr);
+		ft_printf("%s : %p\n", get_zone_type(zone_type), zone_ptr);
 		show_meta_block(&zone_ptr->md_block_head, verbose);
 		zone_ptr = zone_ptr->next;
 	}
@@ -77,7 +77,7 @@ void				show_alloc_mem(void)
 		show_alloc_zone(zone_type, verbose);
 		++zone_type;
 	}
-	printf("Total : %zu bytes\n", g_alloc_mnr.print_total_alloc);
+	ft_printf("Total : %zu bytes\n", g_alloc_mnr.print_total_alloc);
 	pthread_mutex_unlock(&g_mutex_malloc);
 }
 
@@ -95,6 +95,6 @@ void				show_alloc_mem_verbose(void)
 		show_alloc_zone(zone_type, verbose);
 		++zone_type;
 	}
-	printf("Total : %zu bytes\n", g_alloc_mnr.print_total_alloc);
+	ft_printf("Total : %zu bytes\n", g_alloc_mnr.print_total_alloc);
 	pthread_mutex_unlock(&g_mutex_malloc);
 }

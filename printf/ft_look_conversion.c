@@ -24,7 +24,7 @@
 
 static void				create_list(t_flist *lst)
 {
-	lst->flags = ft_strdup(" *****");
+	ft_strcpy_f(lst->flags, " *****");
 	lst->width = -1;
 	lst->precision = -1;
 	lst->hh = 0;

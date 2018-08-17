@@ -37,7 +37,8 @@ OBJECT = ./ft_printf.o \
 	./ft_handling_x.o \
 	./ft_handling_o.o \
 	./ft_handling_ptr.o \
-	./ft_strdel.o
+	./ft_strdel.o \
+	./ft_strcpy.o
 
 .PHONY: all clean fclean re
 
@@ -123,3 +124,6 @@ ft_handling_o.o: ft_handling_o.c
 
 ft_strdel.o: ft_strdel.c
 	$(GCC) $(F) -c ft_strdel.c
+
+ft_strcpy.o: ft_strcpy.c
+	$(GCC) $(F) -c ft_strcpy.c

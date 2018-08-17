@@ -36,7 +36,7 @@
 
 typedef	struct	s_flist
 {
-	char		*flags;
+	char		flags[8];
 	short		width;
 	short		precision;
 	char		hh;
@@ -49,6 +49,7 @@ typedef	struct	s_flist
 	short		size;
 }				t_flist;
 
+char			*ft_strcpy_f(char *dst, const char *src);
 int				ft_handling_char(t_flist *lst, void *c);
 int				ft_handling_str(t_flist *lst, void *str);
 int				ft_handling_digit(t_flist *lst, void *digit);

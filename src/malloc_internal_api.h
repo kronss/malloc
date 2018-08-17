@@ -15,27 +15,29 @@
 
 # include "malloc.h"
 # include "libft.h"
+# include "ft_printf.h"
 
 # include <sys/mman.h>
 # include <pthread.h>
 # include <stdint.h>
 # include <unistd.h>
 
-# define PAGE_SIZE  (getpagesize())
-# define TINY_ZONE  (8LU * getpagesize())
-# define SMALL_ZONE (1500LU * getpagesize())
+# define PAGE_SIZE  (1LU * getpagesize())
+# define TINY_ZONE  (2LU * PAGE_SIZE)
+# define SMALL_ZONE (1000LU * getpagesize())
 
 # define TINY_TRESHHOLD  ((TINY_ZONE - ZONE_HEAD_SIZE) / 100)
 # define SMALL_TRESHHOLD ((SMALL_ZONE - ZONE_HEAD_SIZE) / 100)
 
-# define PROT_FLAGS	(PROT_EXEC | PROT_READ | PROT_WRITE)
-# define MAP_FLAGS	(MAP_ANONYMOUS | MAP_PRIVATE)
+# define PROT_FLAGS (PROT_EXEC | PROT_READ | PROT_WRITE)
+# define MAP_FLAGS  (MAP_ANONYMOUS | MAP_PRIVATE)
 
-# define ALIGN_PAGE_SIZE(len_) (len_) = ((PAGE_SIZE - 1) & (len_)) ? (((len_) + PAGE_SIZE) & ~(PAGE_SIZE - 1)) : (len_)
+# define P PAGE_SIZE
+# define ALIGN_PAGE_SIZE(l) (l) = ((P-1) & (l)) ? (((l)+P) & ~(P-1)) : (l)
 # define METABLOCK_SIZE sizeof(struct s_block)
 # define ZONE_HEAD_SIZE sizeof(struct s_zone)
-# define ALIGN_WORD(x) (((((x) - 1) >> 2) << 2) + 4)  //TODO: re work
-# define ALIGN_META_INFO(x) (x) = ALIGN_WORD((x) + sizeof(struct s_block))  //TODO: re work
+# define ALIGN_WORD(x) (((((x) - 1) >> 2) << 2) + 4)
+# define ALIGN_META_INFO(x) (x) = ALIGN_WORD((x) + sizeof(struct s_block))
 
 # define OFFSETOF(st, m) ((size_t)&(((st *)0)->m))
 

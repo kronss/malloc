@@ -9,8 +9,7 @@ SYMLINK = libft_malloc.so
 
 CC = gcc
 
-#F = -Wall -Wextra -Werror -fPIC
-F = -Wall -Wextra  -fPIC
+F = -Wall -Wextra -Werror -fPIC
 FSHARED = -shared -fPIC 
 
 
@@ -59,7 +58,7 @@ OBJ_DIR = .obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(OBJ_FILE_NAME))
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	$(CC) $(F) -o $@ -c $< -I$(INC_DIR) -I$(LIB_INC) -I./src
+	$(CC) $(F) -o $@ -c $< -I$(INC_DIR) -I$(LIB_INC) -I$(PF_PATH) 
 
 $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
@@ -70,9 +69,10 @@ $(OBJ_DIR):
 
 all: $(NAME) $(SYMLINK)
 
-#$(NAME): $(LIB) $(PF) $(OBJ) $(INC)
-$(NAME): $(LIB) $(OBJ) $(INC) src/malloc_internal_api.h
-		$(CC) $(F) $(FSHARED) $(OBJ) $(LIB) -o $(NAME) 
+$(NAME): $(LIB) $(PF) $(OBJ) $(INC)
+#$(NAME): $(LIB) $(OBJ) $(INC)
+#	$(CC) $(F) $(FSHARED) $(OBJ) $(LIB) -o $(NAME)
+		$(CC) $(F) $(FSHARED) $(OBJ) $(LIB) $(PF) -o $(NAME) 
 
 $(SYMLINK):
 	ln -s $(NAME) $(SYMLINK)
@@ -93,7 +93,6 @@ clean.light:
 	rm -rf $(OBJ) .obj/main.o
 
 rew: clean.light all test
-#	/usr/bin/time ./a.out
 	/usr/bin/time -l ./a.out
 #	/usr/bin/time --verbose ./a.out
 

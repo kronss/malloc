@@ -39,6 +39,5 @@ int		ft_out(t_flist *lst, va_list va)
 		res = (ft_handling_ptr(lst, va_arg(va, void *)));
 	else
 		res = (ft_handling_char(lst, va_arg(va, void *)));
-	ft_strdel(&(lst->flags));
 	return (res);
 }
