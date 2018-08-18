@@ -24,7 +24,7 @@
 
 # define PAGE_SIZE  (1LU * getpagesize())
 # define TINY_ZONE  (2LU * PAGE_SIZE)
-# define SMALL_ZONE (1000LU * getpagesize())
+# define SMALL_ZONE (1000LU * PAGE_SIZE)
 
 # define TINY_TRESHHOLD  ((TINY_ZONE - ZONE_HEAD_SIZE) / 100)
 # define SMALL_TRESHHOLD ((SMALL_ZONE - ZONE_HEAD_SIZE) / 100)

@@ -1,4 +1,14 @@
-
+#******************************************************************************#
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ochayche <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2018/08/18 13:19:39 by ochayche          #+#    #+#              #
+#    Updated: 2018/08/18 13:19:43 by ochayche         ###   ########.fr        #
+#                                                                              #
+#******************************************************************************#
 
 ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
@@ -70,9 +80,7 @@ $(OBJ_DIR):
 all: $(NAME) $(SYMLINK)
 
 $(NAME): $(LIB) $(PF) $(OBJ) $(INC)
-#$(NAME): $(LIB) $(OBJ) $(INC)
-#	$(CC) $(F) $(FSHARED) $(OBJ) $(LIB) -o $(NAME)
-		$(CC) $(F) $(FSHARED) $(OBJ) $(LIB) $(PF) -o $(NAME) 
+	$(CC) $(F) $(FSHARED) $(OBJ) $(LIB) $(PF) -o $(NAME) 
 
 $(SYMLINK):
 	ln -s $(NAME) $(SYMLINK)
@@ -85,7 +93,8 @@ clean: libft.clean printf.clean
 	rm -rf $(OBJ)
 
 fclean: libft.fclean printf.fclean clean
-	rm -f $(NAME) $(SYMLINK) a.out
+	rm -f $(NAME) $(SYMLINK)
+	rm -rf $(OBJ_DIR)
 
 re: fclean all
 
@@ -129,14 +138,12 @@ printf.re:
 	make -C $(PF_PATH)/ re
 
 
-
 	
 #	$(CC) src/main.c libft_malloc.so -Wl,-rpath=. -I./include
 	
 #	gcc src/main.c -o a.out -I./include #-I$(LIB_INC)# -fPIC libft_malloc.so
 	
 	#gcc .obj/main.o $(OBJ) $(LIB)  -o a.out 
-	
 
 
 DEBUGBIN = a.debug
